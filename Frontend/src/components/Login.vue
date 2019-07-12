@@ -137,7 +137,7 @@
                 console.log(error);
               })
           } else {
-            return false;
+            return true;
           }
         });
       },
