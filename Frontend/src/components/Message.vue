@@ -347,7 +347,7 @@
             }
         },
         created() {
-            this.photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+            this.photo = 'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
                 '&type=2';
             //一开始只请求私信的相关数据
             this.messageInit();
@@ -401,7 +401,7 @@
                 // console.log(this.currentTalker.ID)
             },
             sendMessage() {
-                this.axios.post('http://192.168.43.249:54468/api/Message/SendMessage', {
+                this.axios.post('http://localhost:6001/api/Message/SendMessage', {
                         Sender_ID: this.$store.state.currentUserId_ID,
                         Receiver_ID: this.currentTalker.ID,
                         Send_Time: this.getNowFormatDate(),
@@ -500,17 +500,17 @@
             },
             messageInit: function () {
                 //请求私信用户列表
-                this.axios.get('http://192.168.43.249:54468/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://localhost:6001/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
                         this.messageUserList = response.data;
                         this.messageUserList.forEach(element => {
                             Vue.set(element, 'selected', false);
-                            var photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                            var photo = 'http://localhost:6001/api/Picture/FirstGet?id=' +
                                 element.ID +
                                 '&type=2';
                             Vue.set(element, 'Photo', photo);
                             //最后一条私信内容
-                            this.axios.get('http://192.168.43.249:54468/api/Message/GetMessage', {
+                            this.axios.get('http://localhost:6001/api/Message/GetMessage', {
                                     params: {
                                         Sender_ID: this.$store.state.currentUserId_ID,
                                         Receiver_ID: element.ID
@@ -550,7 +550,7 @@
                             //不在历史私信用户列表中
                             if (index == this.messageUserList.length) {
                                 //插入新的私信用户
-                                this.axios.get('http://192.168.43.249:54468/api/Users/GetUserInfobyID', {
+                                this.axios.get('http://localhost:6001/api/Users/GetUserInfobyID', {
                                         params: {
                                             id: currentTalkerId
                                         }
@@ -559,7 +559,7 @@
                                         let user = response.data;
                                         Vue.set(user, 'selected', true);
                                         var photo =
-                                            'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                                            'http://localhost:6001/api/Picture/FirstGet?id=' +
                                             user.ID +
                                             '&type=2';
                                         Vue.set(user, 'Photo', photo);
@@ -591,17 +591,17 @@
             },
             questUsers: function () {
                 //请求私信用户列表
-                this.axios.get('http://192.168.43.249:54468/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://localhost:6001/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
                         this.messageUserList = response.data;
                         this.messageUserList.forEach(element => {
                             Vue.set(element, 'selected', false);
-                            var photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                            var photo = 'http://localhost:6001/api/Picture/FirstGet?id=' +
                                 element.ID +
                                 '&type=2';
                             Vue.set(element, 'Photo', photo);
                             //最后一条私信内容
-                            this.axios.get('http://192.168.43.249:54468/api/Message/GetMessage', {
+                            this.axios.get('http://localhost:6001/api/Message/GetMessage', {
                                     params: {
                                         Sender_ID: this.$store.state.currentUserId_ID,
                                         Receiver_ID: element.ID
@@ -627,7 +627,7 @@
                     });
             },
             questMessages: function () {
-                this.axios.get('http://192.168.43.249:54468/api/Message/GetMessage', {
+                this.axios.get('http://localhost:6001/api/Message/GetMessage', {
                         params: {
                             Sender_ID: this.$store.state.currentUserId_ID,
                             Receiver_ID: this.currentTalker.ID
@@ -656,12 +656,12 @@
                 dialog.scrollTop = dialog.scrollHeight;
             },
             questFollows: function () {
-                this.axios.get('http://192.168.43.249:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://localhost:6001/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
                         if (response.data.length) {
                             this.messageFollow = response.data;
                             this.messageFollow.forEach(element => {
-                                var photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                                var photo = 'http://localhost:6001/api/Picture/FirstGet?id=' +
                                     element.ID +
                                     '&type=2';
                                 console.log(photo)
@@ -676,7 +676,7 @@
                     });
             },
             questOthers: function (api) {
-                this.axios.get('http://192.168.43.249:54468/api/' + api + '?user_id=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://localhost:6001/api/' + api + '?user_id=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
                         if (response.data.m_Item1 != null) {
                             let moments = response.data.m_Item1;

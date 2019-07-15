@@ -49,7 +49,7 @@
     <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
       <el-row>
         <el-col :span="3" :offset="0">
-          <img :src="'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'+'&Rand=' + Math.random()"
+          <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'+'&Rand=' + Math.random()"
             alt="headImg" style="width:80px;height:80px;border-radius:80px;">
         </el-col>
         <el-col :span="18" :offset="0">
@@ -63,7 +63,7 @@
                 <el-col :span="6" v-show="showUploadArea"></el-col>
                 <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
 
-                  <el-upload ref="upload" action="http://192.168.43.249:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove"
+                  <el-upload ref="upload" action="http://localhost:6001/api/Picture" list-type="picture-card" :on-remove="handleRemove"
                     :file-list="uploadImgs" :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange"
                     :on-success="uploadOnSuccess" :on-error="uploadOnError" :on-progress="uploadOnProgress" :on-exceed="upLoadOnExceed"
                     :show-file-list="true" :limit="9" :multiple="true" class="upload" :data="pictureObj">
@@ -288,7 +288,7 @@
         this.showUpload = true;
         this.sendLastHandler();
 
-        this.axios.get('http://192.168.43.249:54468/api/Moment/NextMomentID')
+        this.axios.get('http://localhost:6001/api/Moment/NextMomentID')
           .then((response) => {
             this.currentMomentID = response.data;
           })
@@ -297,7 +297,7 @@
         this.showUploadArea = true;
         this.showTextArea = false;
 
-        this.axios.post('http://192.168.43.249:54468/api/Moment/InsertMoment', {
+        this.axios.post('http://localhost:6001/api/Moment/InsertMoment', {
             ID: this.currentMomentID,
             SenderID: this.$store.state.currentUserId_ID,
             Content: this.sendText,
@@ -311,7 +311,7 @@
             if (response.data == 0) {
 
               if (this.tags.length > 0) {
-                this.axios.get('http://192.168.43.249:54468/api/Tag/AddTag?Moment_Id=' + this.currentMomentID + '&', {
+                this.axios.get('http://localhost:6001/api/Tag/AddTag?Moment_Id=' + this.currentMomentID + '&', {
                   params: {
                     TagNames: this.tags,
                   },
@@ -401,7 +401,7 @@
         }; //添加请求头
 
 
-        this.axios.post('http://192.168.43.249:54468/api/Picture/Save?id=' + this.currentMomentID + '&type=1',
+        this.axios.post('http://localhost:6001/api/Picture/Save?id=' + this.currentMomentID + '&type=1',
           formdata1,
           config).then((response) => { //这里的/xapi/upimage为接口
           console.log(response.data);

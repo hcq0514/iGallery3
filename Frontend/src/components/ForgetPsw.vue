@@ -159,7 +159,7 @@
           if (valid) {
             this.email = '';
             this.checkVerifyCode = '';
-            this.axios.get('http://192.168.43.249:54468/api/Users/VerifyMail', {
+            this.axios.get('http://localhost:6001/api/user/VerifyMail', {
                 params: {
                   email: this.emailForm.email
                 }
@@ -190,7 +190,7 @@
       finishHandler: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.put('http://192.168.43.249:54468/api/Users/ChangePassword?email=' + this.email + '&NewPassword=' +
+            this.axios.put('http://localhost:6001/api/user/ChangePassword?email=' + this.email + '&NewPassword=' +
               md5(this.passwordForm.password).substr(0,20) // , {
               //   email: this.email,
               //   NewPassword: this.passwordForm.password

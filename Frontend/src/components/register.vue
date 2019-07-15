@@ -188,7 +188,7 @@
 
         methods: {
             sendCodeButtonClick() {
-                this.axios.get('http://192.168.43.249:54468/api/Users/VerifyRegister?Email=' + this.email)
+                this.axios.get('http://localhost:6001/api/user/VerifyRegister?Email=' + this.email)
                     .then((response) => {
                         if (response.data == 1) {
                             this.$message({
@@ -242,7 +242,7 @@
                 if (this.isEmail(this.email)) {
                     // this.axios.get('http://10.0.1.61:50192/api/values/5')
                     var md5Pass = (md5(this.ruleForm.password)).substr(0, 20);
-                    this.axios.post('http://192.168.43.249:54468/api/Users/Register', {
+                    this.axios.post('http://localhost:6001/api/user/Register', {
                             Email: this.email,
                             Username: this.username,
                             Password: md5Pass,

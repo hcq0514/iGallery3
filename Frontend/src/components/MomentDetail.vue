@@ -70,7 +70,7 @@
                         <!-- 顶部评论区 -->
                         <el-row type="flex" justify="center">
                             <el-col :span="2">
-                                <img :src="'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+                                <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
                         '&type=2'+'&Rand=' + Math.random()" alt="" style="width:40px;height:40px;border-radius:40px;">
                             </el-col>
                             <el-col :span="21" :offset="1">
@@ -191,7 +191,7 @@
                 <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
                     <el-row>
                         <el-col :span="3" :offset="0">
-                            <img :src="'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
+                            <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
                                 style="width:80px;height:80px;border-radius:80px;">
                         </el-col>
                         <el-col :span="18" :offset="0">
@@ -205,7 +205,7 @@
                                         <el-col :span="6" v-show="showUploadArea"></el-col>
                                         <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
 
-                                            <el-upload ref="upload" action="http://192.168.43.249:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove"
+                                            <el-upload ref="upload" action="http://localhost:6001/api/Picture" list-type="picture-card" :on-remove="handleRemove"
                                                 :file-list="uploadImgs" :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange"
                                                 :on-success="uploadOnSuccess" :on-error="uploadOnError" :on-progress="uploadOnProgress"
                                                 :on-exceed="upLoadOnExceed" :show-file-list="true" :limit="9" :multiple="true"
@@ -426,7 +426,7 @@
         methods: {
             deleteClickHandler() {
 
-                this.axios.put('http://192.168.43.249:54468/api/ModifyMoment/DeleteMoment?email=' + this.$store.state.currentUserId +
+                this.axios.put('http://localhost:6001/api/ModifyMoment/DeleteMoment?email=' + this.$store.state.currentUserId +
                         '&moment_id=' + this.$route.params.id)
                     .then((response) => {
                         if (response.data == 0) {
@@ -467,7 +467,7 @@
                         'Content-Type': 'multipart/form-data'
                     }
                 };
-                this.axios.post('http://192.168.43.249:54468/api/Coment/DelCmt', formdata, config)
+                this.axios.post('http://localhost:6001/api/Coment/DelCmt', formdata, config)
                     .then((response) => {
                         this.$message({
                             message: '评论删除成功！',
@@ -503,7 +503,7 @@
                 console.log('————发布内容————');
                 this.$refs.upload.submit(); //上传图片
 
-                this.axios.put('http://192.168.43.249:54468/api/ModifyMoment/ModifyMoment', {
+                this.axios.put('http://localhost:6001/api/ModifyMoment/ModifyMoment', {
                         email: this.$store.state.currentUserId,
                         moment_id: this.$route.params.id,
                         content: this.moment.Content
@@ -539,7 +539,7 @@
                     })
 
                 if (this.moment.tags.length > 0) {
-                    this.axios.get('http://192.168.43.249:54468/api/Tag/AddTag?Moment_Id=' + this.$route.params.id +
+                    this.axios.get('http://localhost:6001/api/Tag/AddTag?Moment_Id=' + this.$route.params.id +
                         '&', {
                             params: {
                                 TagNames: this.moment.tags,
@@ -576,7 +576,7 @@
                         'Content-Type': 'multipart/form-data'
                     }
                 }; //添加请求头
-                this.axios.post('http://192.168.43.249:54468/api/Picture/Save?id=2&type=1', formdata1, config).then((
+                this.axios.post('http://localhost:6001/api/Picture/Save?id=2&type=1', formdata1, config).then((
                     response) => { //这里的/xapi/upimage为接口
                     console.log(response.data);
                 })
@@ -633,12 +633,12 @@
             },
             likeListHandler() {
                 this.likeListVisible = true
-                this.axios.get('http://192.168.43.249:54468/api/DisplayLikeList/GetLikeList?&moment_id=' + this.$route.params
+                this.axios.get('http://localhost:6001/api/DisplayLikeList/GetLikeList?&moment_id=' + this.$route.params
                         .id + '&email=' + this.$store.state.currentUserId)
                     .then(((response) => {
                         this.likeUsers = response.data;
                         this.likeUsers.forEach(element => {
-                            var headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                            var headImg = 'http://localhost:6001/api/Picture/FirstGet?id=' +
                                 element.ID +
                                 '&type=2';
                             Vue.set(element, 'headImg', headImg)
@@ -666,7 +666,7 @@
             },
             collectHandler: function () {
                 if (!this.moment.collectState) {
-                    this.axios.get('http://192.168.43.249:54468/api/Collect/InsertCollect?moment_id=' + this.moment
+                    this.axios.get('http://localhost:6001/api/Collect/InsertCollect?moment_id=' + this.moment
                             .ID +
                             '&founder_id=' + this.$store.state.currentUserId_ID +
                             '&name=' + '默认收藏夹'
@@ -685,7 +685,7 @@
                             console.log(error);
                         });
                 } else {
-                    this.axios.get('http://192.168.43.249:54468/api/Collect/DeleteCollect?moment_id=' + this.moment
+                    this.axios.get('http://localhost:6001/api/Collect/DeleteCollect?moment_id=' + this.moment
                             .ID +
                             '&user_id=' + this.$store.state.currentUserId_ID
                         )
@@ -709,7 +709,7 @@
             },
             likeHandler: function () {
                 // console.log(item)
-                this.axios.put('http://192.168.43.249:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state
+                this.axios.put('http://localhost:6001/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state
                     .currentUserId +
                     '&moment_id=' + this.moment.ID
                 )
@@ -746,7 +746,7 @@
                         cancelButtonText: '取消',
                         center: true
                     }).then(() => {
-                        this.axios.post('http://192.168.43.249:54468/api/Moment/ForwardMoment', {
+                        this.axios.post('http://localhost:6001/api/Moment/ForwardMoment', {
                                 User_ID: this.$store.state.currentUserId_ID,
                                 Moment_ID: this.moment.ID
                             })
@@ -775,7 +775,7 @@
             },
             likeFollowHandler: function (user, FollowState) {
 
-                this.axios.get('http://192.168.43.249:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
                         '&followedID=' + user.ID)
                     .then((response) => {
                         if (response.data == 0) {
@@ -814,7 +814,7 @@
                 user.FollowState = !user.FollowState;
                 console.log(user.FollowState);
 
-                this.axios.get('http://192.168.43.249:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
                         '&followedID=' + user.SenderID)
                     .then((response) => {
                         if (response.data == 0) {
@@ -860,7 +860,7 @@
             submitBlogComment: function () {
                 if (this.blogComment.comment) {
                     this.comments.unshift({
-                        headImg: 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state
+                        headImg: 'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state
                             .currentUserId_ID +
                             '&type=2',
                         Username: this.$store.state.currentUsername,
@@ -887,7 +887,7 @@
                             'Content-Type': 'multipart/form-data'
                         }
                     };
-                    this.axios.post('http://192.168.43.249:54468/api/Coment/SvCmt', formdata, config)
+                    this.axios.post('http://localhost:6001/api/Coment/SvCmt', formdata, config)
                         .then((response) => {
                             this.$message({
                                 message: '评论成功！',
@@ -910,7 +910,7 @@
             submitCommentComment: function (comment) {
                 if (this.commentComment.comment) {
                     this.comments.unshift({
-                        headImg: 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state
+                        headImg: 'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state
                             .currentUserId_ID +
                             '&type=2',
                         Username: this.$store.state.currentUsername,
@@ -938,7 +938,7 @@
                             'Content-Type': 'multipart/form-data'
                         }
                     };
-                    this.axios.post('http://192.168.43.249:54468/api/Coment/SvCmt', formdata, config)
+                    this.axios.post('http://localhost:6001/api/Coment/SvCmt', formdata, config)
                         .then((response) => {
                             this.$message({
                                 message: '评论成功！',
@@ -968,7 +968,7 @@
                 this.hackReset = true
             })
             console.log('route.params', this.$route.params.id)
-            this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$route.params.id +
+            this.axios.get('http://localhost:6001/api/Picture/FirstGet?id=' + this.$route.params.id +
                     '&type=1')
                 .then((response) => {
                     this.imgList = [];
@@ -976,14 +976,14 @@
                     response.data.forEach(element => {
                         console.log('gege')
                         this.imgList.push({
-                            url: 'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
+                            url: 'http://localhost:6001/api/Picture/Gets?pid=' +
                                 element
                         })
                         console.log(this.imgList)
                     });
                 });
 
-            this.axios.get('http://192.168.43.249:54468/api/Picture/GetSz?mid=' + this.$route.params.id)
+            this.axios.get('http://localhost:6001/api/Picture/GetSz?mid=' + this.$route.params.id)
                 .then((response) => {
                     if (response.data != null) {
                         var width = response.data.width;
@@ -1000,15 +1000,15 @@
                     console.log(error);
                 });
             //
-            this.axios.get('http://192.168.43.249:54468/api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
+            this.axios.get('http://localhost:6001/api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
                     '&MomentID=' + this.$route.params.id)
                 .then((response) => {
 
                     this.moment = response.data.moment;
                     this.moment.Username = response.data.user_username;
-                    // this.moment.displayDelete = 
+                    // this.moment.displayDelete =
 
-                    this.userHeadImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.moment.SenderID +
+                    this.userHeadImg = 'http://localhost:6001/api/Picture/FirstGet?id=' + this.moment.SenderID +
                         '&type=2';
 
 
@@ -1057,12 +1057,12 @@
                     console.log(error);
                 });
 
-            this.axios.get('http://192.168.43.249:54468/api/Coment/LdCmt?Mid=' + this.$route.params.id)
+            this.axios.get('http://localhost:6001/api/Coment/LdCmt?Mid=' + this.$route.params.id)
                 .then((response) => {
                     this.comments = [];
                     response.data.forEach(element => {
                         var comment = {};
-                        var headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.Sender_id +
+                        var headImg = 'http://localhost:6001/api/Picture/FirstGet?id=' + element.Sender_id +
                             '&type=2';
 
                         Vue.set(comment, 'headImg', headImg)

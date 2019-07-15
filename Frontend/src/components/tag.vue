@@ -290,7 +290,7 @@
         },
 
         created() {
-            this.axios.get('http://192.168.43.249:54468/api/Moment_Tag/Followers?Page=1' + '&PageSize=10' +
+            this.axios.get('http://localhost:6001/api/Moment_Tag/Followers?Page=1' + '&PageSize=10' +
                     '&TagContent=' +
                     this.$route.params.id + '&Email=' + this.$store.state.currentUserId)
                 .then((response) => {
@@ -314,15 +314,15 @@
                         element.likeState = false;
                         element.userName = response.data.m_Item4[index]
                         index++;
-                        element.src = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.SenderID +
+                        element.src = 'http://localhost:6001/api/Picture/FirstGet?id=' + element.SenderID +
                             '&type=2'
-                        this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.ID +
+                        this.axios.get('http://localhost:6001/api/Picture/FirstGet?id=' + element.ID +
                                 '&type=1')
                             .then((response) => {
-                                this.tagImg = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
+                                this.tagImg = 'http://localhost:6001/api/Picture/Gets?pid=' +
                                     response.data[0];
                                 Vue.set(element, 'contentSrc',
-                                    'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
+                                    'http://localhost:6001/api/Picture/Gets?pid=' +
                                     response.data[0]);
                             })
                     });
@@ -342,7 +342,7 @@
                 this.$router.push('/main/momentDetail/' + momentId);
             },
             followClickHandler() {
-                this.axios.put('http://192.168.43.249:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
+                this.axios.put('http://localhost:6001/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
                         '&tag=' + this.$route.params.id)
                     .then((response) => {
                         if (response.data) {
@@ -376,7 +376,7 @@
                 return aIntNum.join(".");
             },
             handleLikeClick(item) {
-                this.axios.put('http://192.168.43.249:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state
+                this.axios.put('http://localhost:6001/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state
                     .currentUserId +
                     '&moment_id=' + item.ID
                 ).then((response) => {

@@ -454,7 +454,7 @@
     return Dictionary;
   })();
 
-  
+
   export default {
     data() {
       return {
@@ -602,7 +602,7 @@
               Page: 1,
             }
           }),
-          this.axios.get('http://192.168.43.249:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
+          this.axios.get('http://localhost:6001/api/user/FollowList?userID=' + this.$store.state.currentUserId_ID)
         ])
         .then(this.axios.spread((res1, res2) => {
           this.totalMoments = res1.data;
