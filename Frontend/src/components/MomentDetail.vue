@@ -6,11 +6,11 @@
         <el-row>
             <el-col :span="10" :offset="4">
                 <el-carousel v-if="hackReset" :height="carouselHeight" :interval="0" indicator-position="outside">
-                    <el-carousel-item v-for="(img,index) in imgList" :key="index">
+<!--                    <el-carousel-item v-for="(img,index) in imgList" :key="index">-->
                         <div class="pic">
-                            <img :src="img.url+'&Rand=' + Math.random()" alt="movementImg">
+                            <img :src="moment.photoUrl+'&Rand=' + Math.random()" alt="movementImg">
                         </div>
-                    </el-carousel-item>
+<!--                    </el-carousel-item>-->
                 </el-carousel>
                 <!-- 操作 -->
                 <el-row>
@@ -52,7 +52,6 @@
                                             </div>
                                         </div>
                                     </el-dialog>
-
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
@@ -82,8 +81,7 @@
                         <!-- 顶部评论区 -->
                         <el-row type="flex" justify="center">
                             <el-col :span="2">
-                                <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
-                        '&type=2'+'&Rand=' + Math.random()" alt="" style="width:40px;height:40px;border-radius:40px;">
+                                <img :src="this.$store.state.currentUserPhoto +'&Rand=' + Math.random()" alt="" style="width:40px;height:40px;border-radius:40px;">
                             </el-col>
                             <el-col :span="21" :offset="1">
                                 <el-form ref="blogComment" :model="blogComment" :inline="true">
@@ -173,17 +171,17 @@
                     <div slot="header" class="clearfix">
                         <el-row type="flex" align="middle">
                             <el-col :span="6" :offset="1">
-                                <img :src="userHeadImg+'&Rand=' + Math.random()" alt="头像"
+                                <img :src="moment.userHeadImg+'&Rand=' + Math.random()" alt="头像"
                                      style="width:80px;height:80px;border-radius:80px;" class="hover-cursor"
-                                     @click="jumpToUser(moment.SenderID)">
+                                     @click="jumpToUser(moment.userId)">
                             </el-col>
                             <el-col :span="16">
                                 <el-row type="flex" align="middle">
                                     <el-col :span="10" :offset="2">
-                                        <span class="hover-cursor" @click="jumpToUser(moment.moment.SenderID)">{{moment.Username}}</span>
+                                        <span class="hover-cursor" @click="jumpToUser(moment.moment.SenderID)">{{moment.username}}</span>
                                     </el-col>
                                     <el-col :span="4" :offset="4">
-                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain
+                                        <el-button v-if="moment.userId!=$store.state.currentUserId_ID" plain
                                                    size="small" @click="followHandler(moment,moment.FollowState)"
                                                    :class="{followed:moment.FollowState}">{{moment.followState}}
                                         </el-button>
@@ -207,7 +205,7 @@
                     </div>
                     <div id="content">
                         <div id="text">
-                            <p style="margin:0">{{moment.Content}}</p>
+                            <p style="margin:0">{{moment.content}}</p>
                             <el-button type="text" v-for="(tag,index) in moment.tags" :key="index"
                                        @click="jumpToTag(tag)">#{{tag}}
                             </el-button>
@@ -322,7 +320,6 @@
                 loadingPage: true,
                 carouselHeight: 100,
                 sendMomentImgNum: 100,
-                userHeadImg: '',
                 hackReset: false,
                 pictureURL: '',
                 navBarFixed: false,
@@ -367,19 +364,19 @@
                 commentComment: {
                     comment: ''
                 },
-                imgList: [],
                 moment: {
-
-                    ID: '111',
-                    Username: 'Leonnnop',
-                    SenderID: '16',
+                    id: '',
+                    userId: '',
+                    username: '',
+                    userHeadImg :'',
                     FollowState: false,
                     followState: '关注',
                     userPage: '',
-                    Time: '2018-07-15 00:00',
-                    Content: '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
+                    createTime: '2018-07-15 00:00',
+                    content: '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...',
+                    photoUrl:'',
                     tags: [
                         'tag1', 'tag2', 'tag3'
                     ],
@@ -391,12 +388,12 @@
                     collectState: false,
                 },
                 comments: [{
-                    headImg: require('../image/a.jpg'),
+                    headImg: 'https://i.ibb.co/515PkG6/20190715145133.jpg',
                     ID: '222',
                     Username: 'user3',
                     userPage: '',
                     send_time: '2018-07-18 12:00',
-                    content: '第三条评论',
+                    content: '我也觉得伍俊锋是傻屌',
                     isCommentAComment: false,
                     quoteComment: {}
                 }],
@@ -946,22 +943,7 @@
             this.$nextTick(() => {
                 this.hackReset = true
             })
-
-            this.axios.get('http://localhost:6001/api/Picture/FirstGet?id=' + this.$route.params.id +
-                '&type=1')
-                .then((response) => {
-                    this.imgList = [];
-                    console.log('ge')
-                    response.data.forEach(element => {
-                        console.log('gege')
-                        this.imgList.push({
-                            url: 'http://localhost:6001/api/Picture/Gets?pid=' +
-                                element
-                        })
-                        console.log(this.imgList)
-                    });
-                });
-
+            //todo 这边到时候根据七牛云返回的格式来定
             this.axios.get('http://localhost:6001/api/Picture/GetSz?mid=' + this.$route.params.id)
                 .then((response) => {
                     if (response.data != null) {
@@ -978,7 +960,6 @@
                 .catch((error) => {
                     console.log(error);
                 });
-            //
             this.axios.get('http://localhost:6001/api/moment/detail?userId=' + this.$store.state.currentUserId_ID +
                 '&momentId=' + this.$route.params.id)
                 .then((response) => {
