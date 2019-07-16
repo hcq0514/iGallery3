@@ -139,7 +139,7 @@
                     <el-col v-for="moment in moments" :key="moment.content" :span="6">
                         <el-col>
                             <div class="moments"
-                                 :style="{backgroundImage:'url('+moment.url+'&Rand=' + Math.random() + ')'}"
+                                 :style="{backgroundImage:'url('+moment.photoUrl+'&Rand=' + Math.random() + ')'}"
                                  @click="toMoment(moment.id)"> {{moment.content}}
                             </div>
                         </el-col>
@@ -559,9 +559,9 @@
                 desc: '感觉头发被掉光。',
                 momentNum: 0,
                 moments: [{
-                    momentID: '0',
-                    url: require('../image/a.jpg'),
-                    text: 'zero'
+                    id: '',
+                    photoUrl: '',
+                    content: ''
                 }],
                 favors: [ //收藏夹信息,
                     {
@@ -1090,18 +1090,6 @@
             this.axios.get('http://localhost:6001/api/moment/getCommentsByUserId?userId=' + this.$route.params.id)
                 .then((response) => {
                     this.moments = response.data.t;
-                    (this.moments).forEach(element => {
-                        // element.ID = response.data.ID[index]
-                        // index++;
-                        element.momentID = t.id;
-                        Vue.set(element, 'url', 'https://i.ibb.co/515PkG6/20190715145133.jpg');
-                        element.url = 'https://i.ibb.co/515PkG6/20190715145133.jpg';
-                        // this.axios.get('http://localhost:6001/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
-                        //     .then((response) => {
-                        //         var url = 'http://localhost:6001/api/Picture/Gets?pid=' + response.data[0];
-                        //         Vue.set(element, 'url', url);
-                        //     })
-                    })
                 })
 
             this.axios.get('http://localhost:6001/api/user/getFollowListByUserId?userId=' + this.$route.params.id)

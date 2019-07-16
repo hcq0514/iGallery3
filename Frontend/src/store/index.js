@@ -8,12 +8,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        currentUserId: '302827797@qq.com',
+        currentUserId: '1',
         currentUserId_ID: '1',
         currentUsername: 'hcq',
         currentUserPassword:'11111111',
         currentUserBio: 'hello',
-        currentUserPhoto: 'https://ibb.co/Jcz9qmK',
+        currentUserPhoto: 'https://i.ibb.co/515PkG6/20190715145133.jpg',
     },
     mutations: {
         addCurrentUserId(state, currentId) {
