@@ -12,25 +12,25 @@
                     <el-row>
                         <el-col :span="6" :offset="1" style="margin:20px;padding-left:30px">
                             <!--<el-upload v-if="$route.params.id==$store.state.currentUserId_ID" class="avatar-uploader"-->
-                                       <!--action="https://jsonplaceholder.typicode.com/posts/"-->
-                                       <!--:show-file-list="false" :on-success="handleAvatarSuccess"-->
-                                       <!--:before-upload="beforeAvatarUpload" :on-progress="uploadOnProgress">-->
+                            <!--action="https://jsonplaceholder.typicode.com/posts/"-->
+                            <!--:show-file-list="false" :on-success="handleAvatarSuccess"-->
+                            <!--:before-upload="beforeAvatarUpload" :on-progress="uploadOnProgress">-->
 
-                                <!--<div class="moment"-->
-                                     <!--:style="{backgroundImage: 'url(' + (headUrl)+'&Rand=' + Math.random() + ')'}">-->
-                                    <!--<div class="moment-inner">-->
-                                        <!--<div class="icon">-->
-                                            <!--<el-row type="flex" justify="center" align="middle">-->
-                                                <!--<img src="../image/upload-icon.png" alt="" height="60px">-->
+                            <!--<div class="moment"-->
+                            <!--:style="{backgroundImage: 'url(' + (headUrl)+'&Rand=' + Math.random() + ')'}">-->
+                            <!--<div class="moment-inner">-->
+                            <!--<div class="icon">-->
+                            <!--<el-row type="flex" justify="center" align="middle">-->
+                            <!--<img src="../image/upload-icon.png" alt="" height="60px">-->
 
-                                            <!--</el-row>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
+                            <!--</el-row>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
                             <!--</el-upload>-->
 
                             <!--<img v-if="$route.params.id!=$store.state.currentUserId_ID"-->
-                                 <!--:src="headUrl+'&Rand=' + Math.random()" class="headImg" alt="头像"> -->
+                            <!--:src="headUrl+'&Rand=' + Math.random()" class="headImg" alt="头像"> -->
                             <!---->
                             <img src="https://i.ibb.co/515PkG6/20190715145133.jpg" class="headImg" alt="头像">
 
@@ -49,9 +49,9 @@
                                              class="like-user-li">
                                             <el-row type="flex" justify="center" align="middle">
                                                 <el-col :span="3" :offset="1" style="height:50px;">
-                                                    <img :src="followUser.headImg+'&Rand=' + Math.random()" alt=""
+                                                    <img :src="followUser.photoUrl+'&Rand=' + Math.random()" alt=""
                                                          class="show-comment-img hover-cursor"
-                                                         @click="jumpToUser(followUser.ID)">
+                                                         @click="jumpToUser(followUser.id)">
                                                 </el-col>
                                                 <el-col :span="16">
                                                     <el-row>{{followUser.username}}</el-row>
@@ -79,13 +79,13 @@
                                         <div v-for="(fanUser,index) in fanUsers" :key="index" class="like-user-li">
                                             <el-row type="flex" justify="center" align="middle">
                                                 <el-col :span="3" :offset="1" style="height:50px;">
-                                                    <img :src="fanUser.headImg+'&Rand=' + Math.random()" alt=""
+                                                    <img :src="fanUser.photoUrl+'&Rand=' + Math.random()" alt=""
                                                          class="show-comment-img hover-cursor"
-                                                         @click="jumpToUser(fanUser.ID)">
+                                                         @click="jumpToUser(fanUser.id)">
                                                 </el-col>
                                                 <el-col :span="16">
-                                                    <el-row>{{fanUser.Username}}</el-row>
-                                                    <el-row style="font-size:12px;margin-top:5px;">{{fanUser.Bio}}
+                                                    <el-row>{{fanUser.username}}</el-row>
+                                                    <el-row style="font-size:12px;margin-top:5px;">{{fanUser.bio}}
                                                     </el-row>
                                                 </el-col>
                                                 <el-col :span="3">
@@ -132,14 +132,16 @@
                         </el-menu-item>
                     </el-menu>
                 </el-row>
+                <!-- 判断是动态还是收藏-->
                 <el-row v-if="isDynamic" style="padding-left:30px;padding-top:15px">
                     <div v-if="moments.length<1" class="message">还没有已发表的动态呢！</div>
 
-                    <el-col v-for="moment in moments" :key="moment.name" :span="6">
+                    <el-col v-for="moment in moments" :key="moment.content" :span="6">
                         <el-col>
                             <div class="moments"
                                  :style="{backgroundImage:'url('+moment.url+'&Rand=' + Math.random() + ')'}"
-                                 @click="toMoment(moment.momentID)"></div>
+                                 @click="toMoment(moment.id)"> {{moment.content}}
+                            </div>
                         </el-col>
                     </el-col>
                 </el-row>
@@ -528,120 +530,20 @@
                 FollowState: true,
                 followword: '关注',
                 followUsers: [{
-                    ID: '1',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user1',
-                    Bio: '诚信肥宅',
+                    ID: '',
+                    photoUrl: '',
+                    Username: '',
+                    bio: '',
                     FollowState: true,
                     followState: '已关注'
-                }, {
-                    ID: '2',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user2',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-
-                }, {
-                    ID: '3',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user3',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '4',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user4',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '5',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user5',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '6',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user6',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '7',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user7',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '8',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user8',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
                 }],
                 fanUsers: [{
                     ID: '1',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user1',
-                    Bio: '诚信肥宅',
+                    photoUrl: '',
+                    username: '',
+                    bio: '',
                     FollowState: true,
                     followState: '已关注'
-                }, {
-                    ID: '2',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user2',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-
-                }, {
-                    ID: '3',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user3',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '4',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user4',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '5',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user5',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '6',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user6',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '7',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user7',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '8',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user8',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
                 }],
                 followListVisible: false,
                 currentSelectLeft: '默认收藏夹',
@@ -650,7 +552,7 @@
                 activeIndex: '1',
                 navBarFixed: true,
                 checkedFavor: '默认收藏夹',
-                headUrl: 'https://i.ibb.co/515PkG6/20190715145133.jpg',
+                photoUrl: '',
                 username: '初始昵称',
                 followNum: 0,
                 fansNum: 0,
@@ -660,40 +562,12 @@
                     momentID: '0',
                     url: require('../image/a.jpg'),
                     text: 'zero'
-                }, {
-                    momentID: '1',
-                    url: require('../image/ins1.png'),
-                    text: 'first'
-                }, {
-                    momentID: '2',
-                    url: require('../image/ins2.png'),
-                    text: 'second'
-                }, {
-                    momentID: '3',
-                    url: require('../image/ins3.png'),
-                    text: 'third'
-                }, {
-                    momentID: '4',
-                    url: require('../image/ins_ex.jpg'),
-                    text: 'forth'
                 }],
                 favors: [ //收藏夹信息,
                     {
                         //url: require('../image/gaojin_ciyun.png'),
                         favorName: 'MyCollect',
                         collectNum: 1,
-                    }, {
-                        //url: require('../image/gaojin_radar.png'),
-                        favorName: 'Something',
-                        collectNum: 2,
-                    }, {
-                        //url: require('../image/a.jpg'),
-                        favorName: 'Anything',
-                        collectNum: 3,
-                    }, {
-                        //url: require('../image/a.jpg'),
-                        favorName: 'Nothing',
-                        collectNum: 4,
                     }
                 ],
                 collects: [{ //收藏夹内的动态
@@ -776,7 +650,6 @@
                 window.ws.send('/' + path + ' ' + state);
             },
             followClickHandler() {
-
                 this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
                     '&followedID=' + this.$route.params.id)
                     .then((response) => {
@@ -883,21 +756,14 @@
                 // command()
             },
             followHandler: function (user, FollowState) {
-                console.log(user)
-                console.log(this.$store.state.currentUserId_ID)
-                console.log(user.FollowState);
-                //////////////
                 if (!user.FollowState) {
                     user.followState = '已关注';
                 } else {
                     user.followState = '关注';
-                    console.log(user.followState)
                 }
                 user.FollowState = !user.FollowState;
-                console.log(user.FollowState);
-
-                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
-                    '&followedID=' + user.ID)
+                this.axios.get('http://localhost:6001/api/users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                    '&followedID=' + user.id)
                     .then((response) => {
                         if (response.data == 0) {
                             // this.$message({
@@ -1219,41 +1085,30 @@
                     this.desc = response.data.t.bio;
                     this.fansNum = response.data.t.fansNum;
                     this.followNum = response.data.t.followNum;
+                    this.photoUrl = response.data.t.photoUrl;
                 })
-            this.axios.get('http://localhost:6001/api/HomePage/GetMyMoments?Sender_id=' + this.$route.params.id)
+            this.axios.get('http://localhost:6001/api/moment/getCommentsByUserId?userId=' + this.$route.params.id)
                 .then((response) => {
-                    this.moments = response.data;
-                    console.log(this.moments);
-
+                    this.moments = response.data.t;
                     (this.moments).forEach(element => {
                         // element.ID = response.data.ID[index]
                         // index++;
-                        console.log(this.moments)
-                        element.momentID = element.ID
-                        this.axios.get('http://localhost:6001/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
-                            .then((response) => {
-                                var url = 'http://localhost:6001/api/Picture/Gets?pid=' + response.data[0];
-                                Vue.set(element, 'url', url);
-                            })
+                        element.momentID = t.id;
+                        Vue.set(element, 'url', 'https://i.ibb.co/515PkG6/20190715145133.jpg');
+                        element.url = 'https://i.ibb.co/515PkG6/20190715145133.jpg';
+                        // this.axios.get('http://localhost:6001/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
+                        //     .then((response) => {
+                        //         var url = 'http://localhost:6001/api/Picture/Gets?pid=' + response.data[0];
+                        //         Vue.set(element, 'url', url);
+                        //     })
                     })
                 })
-            this.followUsers = [];
-            this.followNum = this.followUsers.length
 
-            this.axios.get('http://localhost:6001/api/user/followList?userId=' + this.$route.params.id)
+            this.axios.get('http://localhost:6001/api/user/getFollowListByUserId?userId=' + this.$route.params.id)
                 .then((response) => {
-                    if (response.data.success == 'false') {
-                        this.followUsers = [];
-                    } else {
-                        this.followUsers = response.data.t;
-                    }
+                    this.followUsers = response.data.t;
                     // this.followUsers = response.data;
-                    this.followNum = this.followUsers.length
                     this.followUsers.forEach(element => {
-                        // element.headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
-                        //     element.ID +
-                        //     '&type=2';
-                        element.headImg = "https://i.ibb.co/515PkG6/20190715145133.jpg";
                         // 等待修改
                         element.FollowState = true;
                         // element.followState = '已关注'
@@ -1268,22 +1123,11 @@
                     });
                 })
 
-            this.fanUsers = [];
-            this.fansNum = this.fanUsers.length;
-            this.axios.get('http://localhost:6001/api/user/FanList?user_id=' + this.$route.params.id)
+            this.axios.get('http://localhost:6001/api/user/getFansListByUserId?userId=' + this.$route.params.id)
                 .then((response) => {
-                    if (response.data == 'Not found') {
-                        this.fanUsers = [];
-                    } else {
-                        this.fanUsers = response.data;
-                    }
+                    this.fanUsers = response.data.t;
 
-                    this.fansNum = this.fanUsers.length;
                     this.fanUsers.forEach(element => {
-                        var headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
-                            element.ID +
-                            '&type=2';
-                        Vue.set(element, 'headImg', 'https://ibb.co/Jcz9qmK')
                         // 等待修改
                         // element.FollowState = 'true';
                         if (element.FollowState == 'True') {
