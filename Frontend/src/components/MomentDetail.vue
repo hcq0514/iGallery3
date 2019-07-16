@@ -21,21 +21,31 @@
                                     <img :src="likeSrc" alt="like" class="op-img hover-cursor" @click="likeHandler">
                                     <span @click="likeListHandler" class="hover-cursor">{{moment.LikeNum}}</span>
                                     <el-dialog title="" :visible.sync="likeListVisible" width="40%">
-                                        <span slot="title" style="color:#555;font-size:20px;letter-spacing:5px;">点赞</span>
+                                        <span slot="title"
+                                              style="color:#555;font-size:20px;letter-spacing:5px;">点赞</span>
                                         <div style="height:400px;overflow:hidden;overflow-y:auto;">
                                             <div style="border-bottom:1px solid rgb(235,238,245);"></div>
-                                            <div v-for="(likeUser,index) in likeUsers" :key="index" class="like-user-li">
+                                            <div v-for="(likeUser,index) in likeUsers" :key="index"
+                                                 class="like-user-li">
                                                 <el-row type="flex" justify="center" align="middle">
                                                     <el-col :span="3" :offset="1" style="height:50px;">
-                                                        <img :src="likeUser.headImg+'&Rand=' + Math.random()" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(likeUser.ID)">
+                                                        <img :src="likeUser.headImg+'&Rand=' + Math.random()" alt=""
+                                                             class="show-comment-img hover-cursor"
+                                                             @click="jumpToUser(likeUser.ID)">
                                                     </el-col>
                                                     <el-col :span="16">
                                                         <el-row>{{likeUser.Username}}</el-row>
-                                                        <el-row style="font-size:12px;margin-top:5px;">{{likeUser.Bio}}</el-row>
+                                                        <el-row style="font-size:12px;margin-top:5px;">
+                                                            {{likeUser.Bio}}
+                                                        </el-row>
                                                     </el-col>
                                                     <el-col :span="3">
-                                                        <el-button plain size="small" @click="likeFollowHandler(likeUser,likeUser.FollowState)" :class="{followed:likeUser.FollowState}"
-                                                            v-if="likeUser.ID!=$store.state.currentUserId_ID">{{likeUser.followState}}</el-button>
+                                                        <el-button plain size="small"
+                                                                   @click="likeFollowHandler(likeUser,likeUser.FollowState)"
+                                                                   :class="{followed:likeUser.FollowState}"
+                                                                   v-if="likeUser.ID!=$store.state.currentUserId_ID">
+                                                            {{likeUser.followState}}
+                                                        </el-button>
                                                         <!--  -->
                                                     </el-col>
                                                 </el-row>
@@ -47,7 +57,8 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img src="../image/forward.png" alt="forward" class="op-img hover-cursor" @click="forwardHandler()">{{moment.ForwardNum}}
+                                    <img src="../image/forward.png" alt="forward" class="op-img hover-cursor"
+                                         @click="forwardHandler()">{{moment.ForwardNum}}
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
@@ -57,7 +68,8 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img :src="collectSrc" alt="collect" class="op-img hover-cursor" @click="collectHandler">{{moment.CollectNum}}
+                                    <img :src="collectSrc" alt="collect" class="op-img hover-cursor"
+                                         @click="collectHandler">{{moment.CollectNum}}
                                 </el-row>
                             </el-col>
                         </el-row>
@@ -76,11 +88,13 @@
                             <el-col :span="21" :offset="1">
                                 <el-form ref="blogComment" :model="blogComment" :inline="true">
                                     <el-form-item style="width:80%;">
-                                        <el-input type="textarea" v-model="blogComment.comment" placeholder="评论（不超过120个字符）" size="medium" resize="none" autosize
-                                            maxlength="120" style="width:370px;"></el-input>
+                                        <el-input type="textarea" v-model="blogComment.comment"
+                                                  placeholder="评论（不超过120个字符）" size="medium" resize="none" autosize
+                                                  maxlength="120" style="width:370px;"></el-input>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-button type="primary" @click="submitBlogComment" plain size="small">评论</el-button>
+                                        <el-button type="primary" @click="submitBlogComment" plain size="small">评论
+                                        </el-button>
                                     </el-form-item>
                                 </el-form>
                             </el-col>
@@ -89,7 +103,8 @@
                         <div v-for="(comment,index) in comments" :key="index" class="show-comment">
                             <el-row type="flex" align="middle">
                                 <el-col :span="3">
-                                    <img :src="comment.headImg+'&Rand=' + Math.random()" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(comment.Sender_id)">
+                                    <img :src="comment.headImg+'&Rand=' + Math.random()" alt=""
+                                         class="show-comment-img hover-cursor" @click="jumpToUser(comment.Sender_id)">
                                 </el-col>
                                 <el-col :span="5">
                                     <span class="hover-cursor" @click="jumpToUser(comment.Sender_id)">{{comment.Username}}</span>
@@ -102,8 +117,12 @@
                             </el-row>
                             <!-- 引用评论 -->
                             <el-row v-if="JSON.stringify(comment.quoteComment)!=='{}'" style="margin-top:10px;">
-                                <el-card shadow="never" :body-style="{ padding: '10px' }" v-if="comment.quoteComment!=undefined">
-                                    <el-button type="text" @click="jumpToUser(comment.quoteComment.Sender_id)">@{{comment.quoteComment.Username}}：</el-button>{{comment.quoteComment.content}}
+                                <el-card shadow="never" :body-style="{ padding: '10px' }"
+                                         v-if="comment.quoteComment!=undefined">
+                                    <el-button type="text" @click="jumpToUser(comment.quoteComment.Sender_id)">
+                                        @{{comment.quoteComment.Username}}：
+                                    </el-button>
+                                    {{comment.quoteComment.content}}
                                 </el-card>
                             </el-row>
                             <el-row type="flex" justify="space-between" align="middle">
@@ -125,13 +144,17 @@
                                             <el-col :span="21">
                                                 <el-form-item>
                                                     <el-row>
-                                                        <el-input type="textarea" v-model="commentComment.comment" placeholder="评论（不超过120个字符）" resize="none" autosize maxlength="120"></el-input>
+                                                        <el-input type="textarea" v-model="commentComment.comment"
+                                                                  placeholder="评论（不超过120个字符）" resize="none" autosize
+                                                                  maxlength="120"></el-input>
                                                     </el-row>
                                                 </el-form-item>
                                             </el-col>
                                             <el-col :span="2" :offset="1">
                                                 <el-form-item>
-                                                    <el-button type="primary" @click="submitCommentComment(comment)" plain size="small" style="margin-top:8px">评论</el-button>
+                                                    <el-button type="primary" @click="submitCommentComment(comment)"
+                                                               plain size="small" style="margin-top:8px">评论
+                                                    </el-button>
                                                 </el-form-item>
                                             </el-col>
                                         </el-row>
@@ -150,8 +173,9 @@
                     <div slot="header" class="clearfix">
                         <el-row type="flex" align="middle">
                             <el-col :span="6" :offset="1">
-                                <img :src="userHeadImg+'&Rand=' + Math.random()" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor"
-                                    @click="jumpToUser(moment.SenderID)">
+                                <img :src="userHeadImg+'&Rand=' + Math.random()" alt="头像"
+                                     style="width:80px;height:80px;border-radius:80px;" class="hover-cursor"
+                                     @click="jumpToUser(moment.SenderID)">
                             </el-col>
                             <el-col :span="16">
                                 <el-row type="flex" align="middle">
@@ -159,16 +183,23 @@
                                         <span class="hover-cursor" @click="jumpToUser(moment.moment.SenderID)">{{moment.Username}}</span>
                                     </el-col>
                                     <el-col :span="4" :offset="4">
-                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.FollowState)"
-                                            :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
+                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain
+                                                   size="small" @click="followHandler(moment,moment.FollowState)"
+                                                   :class="{followed:moment.FollowState}">{{moment.followState}}
+                                        </el-button>
                                         <el-row type="flex" align="middle">
-                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-edit" circle style="margin-left:0px" @click="modifyClickHandler"></el-button>
-                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-delete" circle style="margin-left:10px" @click="deleteClickHandler"></el-button>
+                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID"
+                                                       icon="el-icon-edit" circle style="margin-left:0px"
+                                                       @click="modifyClickHandler"></el-button>
+                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID"
+                                                       icon="el-icon-delete" circle style="margin-left:10px"
+                                                       @click="deleteClickHandler"></el-button>
                                         </el-row>
                                     </el-col>
                                 </el-row>
                                 <el-row>
-                                    <el-col :span="20" :offset="2" style="font-size:12px;color:#999">{{moment.Time}}</el-col>
+                                    <el-col :span="20" :offset="2" style="font-size:12px;color:#999">{{moment.Time}}
+                                    </el-col>
                                 </el-row>
                             </el-col>
 
@@ -177,7 +208,9 @@
                     <div id="content">
                         <div id="text">
                             <p style="margin:0">{{moment.Content}}</p>
-                            <el-button type="text" v-for="(tag,index) in moment.tags" :key="index" @click="jumpToTag(tag)">#{{tag}}</el-button>
+                            <el-button type="text" v-for="(tag,index) in moment.tags" :key="index"
+                                       @click="jumpToTag(tag)">#{{tag}}
+                            </el-button>
                         </div>
                     </div>
                 </el-card>
@@ -188,16 +221,20 @@
             <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScroll' :''">
 
                 <router-view></router-view>
-                <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
+                <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends"
+                           :show-close="false" top="10px">
                     <el-row>
                         <el-col :span="3" :offset="0">
-                            <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
-                                style="width:80px;height:80px;border-radius:80px;">
+                            <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'"
+                                 alt="headImg"
+                                 style="width:80px;height:80px;border-radius:80px;">
                         </el-col>
                         <el-col :span="18" :offset="0">
                             <div class="sendsContent">
                                 <div class="edit">
-                                    <div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">{{this.$store.state.currentUsername}}</div>
+                                    <div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">
+                                        {{this.$store.state.currentUsername}}
+                                    </div>
                                     <el-row type="flex" justify="center" align="middle">
                                         <el-row>
 
@@ -205,44 +242,61 @@
                                         <el-col :span="6" v-show="showUploadArea"></el-col>
                                         <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
 
-                                            <el-upload ref="upload" action="http://localhost:6001/api/Picture" list-type="picture-card" :on-remove="handleRemove"
-                                                :file-list="uploadImgs" :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange"
-                                                :on-success="uploadOnSuccess" :on-error="uploadOnError" :on-progress="uploadOnProgress"
-                                                :on-exceed="upLoadOnExceed" :show-file-list="true" :limit="9" :multiple="true"
-                                                class="upload" :data="pictureObj">
+                                            <el-upload ref="upload" action="http://localhost:6001/api/Picture"
+                                                       list-type="picture-card" :on-remove="handleRemove"
+                                                       :file-list="uploadImgs" :auto-upload="false"
+                                                       :before-upload="beforeUpload" :on-change="uploadOnChange"
+                                                       :on-success="uploadOnSuccess" :on-error="uploadOnError"
+                                                       :on-progress="uploadOnProgress"
+                                                       :on-exceed="upLoadOnExceed" :show-file-list="true" :limit="9"
+                                                       :multiple="true"
+                                                       class="upload" :data="pictureObj">
                                                 <i class="el-icon-plus"></i>
                                             </el-upload>
 
 
                                         </el-col>
                                         <el-col v-show="showTextArea" :span="16" :offset="2" style="margin-top:0;">
-                                            <el-input type="textarea" resize="none" :rows="12" placeholder="此刻的想法..." v-model="moment.Content"></el-input>
+                                            <el-input type="textarea" resize="none" :rows="12" placeholder="此刻的想法..."
+                                                      v-model="moment.Content"></el-input>
                                             <div class="editTag">
-                                                <el-tag :key="tag" color="#fff" v-for="tag in moment.tags" closable :disable-transitions="false" @close="handleTagClose(tag)">
+                                                <el-tag :key="tag" color="#fff" v-for="tag in moment.tags" closable
+                                                        :disable-transitions="false" @close="handleTagClose(tag)">
                                                     {{tag}}
                                                 </el-tag>
 
-                                                <el-input class="input-new-tag" v-if="tagsInputVisible&&ableToAddTag" v-model="tagsInputValue" ref="saveTagInput" size="small"
-                                                    @keyup.enter.native="handleTagInputConfirm" @blur="handleTagInputConfirm">
+                                                <el-input class="input-new-tag" v-if="tagsInputVisible&&ableToAddTag"
+                                                          v-model="tagsInputValue" ref="saveTagInput" size="small"
+                                                          @keyup.enter.native="handleTagInputConfirm"
+                                                          @blur="handleTagInputConfirm">
                                                 </el-input>
-                                                <el-button v-if="!tagsInputVisible&&ableToAddTag" class="button-new-tag" size="small" @click="showTagInput">+ tag</el-button>
+                                                <el-button v-if="!tagsInputVisible&&ableToAddTag" class="button-new-tag"
+                                                           size="small" @click="showTagInput">+ tag
+                                                </el-button>
                                             </div>
                                         </el-col>
                                     </el-row>
 
                                 </div>
-                                <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
-                                    <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
+                                <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px"
+                                        v-if="showUploadArea&&!showTextArea">
+                                    <el-col :span="12" :offset="4" v-if="!showTextArea">
+                                        已选择{{sendMomentImgNum}}张图片，最多可选择9张图片
+                                    </el-col>
                                     <el-col :span="4">
-                                        <img src="../image/arrow-right.png" alt="" @click="sendNextHandler" v-if="showNextBtn" class="sendMomentBtn">
+                                        <img src="../image/arrow-right.png" alt="" @click="sendNextHandler"
+                                             v-if="showNextBtn" class="sendMomentBtn">
                                     </el-col>
                                 </el-row>
-                                <el-row type="flex" justify="end" style="margin-top:10px" v-if="!showUploadArea&&showTextArea">
+                                <el-row type="flex" justify="end" style="margin-top:10px"
+                                        v-if="!showUploadArea&&showTextArea">
                                     <el-col :span="4">
-                                        <img src="../image/close-circle.png" @click="sendLastHandler" class="sendMomentBtn" style="width:50px;height:50px;margin-top:-5px">
+                                        <img src="../image/close-circle.png" @click="sendLastHandler"
+                                             class="sendMomentBtn" style="width:50px;height:50px;margin-top:-5px">
                                     </el-col>
                                     <el-col :span="4">
-                                        <img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn">
+                                        <img src="../image/send-moment.png" @click="sendMomentHandler"
+                                             class="sendMomentBtn">
                                     </el-col>
                                 </el-row>
                             </div>
@@ -259,14 +313,15 @@
 
 <script>
     import Vue from 'vue'
+
     export default {
         name: 'MomentDetail',
         data() {
             return {
                 displayDelete: false,
                 loadingPage: true,
-                carouselHeight: 0,
-                sendMomentImgNum: 0,
+                carouselHeight: 100,
+                sendMomentImgNum: 100,
                 userHeadImg: '',
                 hackReset: false,
                 pictureURL: '',
@@ -300,56 +355,6 @@
                     Bio: '诚信肥宅',
                     FollowState: true,
                     followState: '已关注'
-                }, {
-                    ID: '2',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user2',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-
-                }, {
-                    ID: '3',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user3',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '4',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user4',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '5',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user5',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '6',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user6',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '7',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user7',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
-                }, {
-                    ID: '8',
-                    headImg: require('../image/a.jpg'),
-                    Username: 'user8',
-                    Bio: '诚信肥宅',
-                    FollowState: false,
-                    followState: '关注'
                 }],
                 ID: '000',
                 Username: this.$store.state.currentUsername,
@@ -393,41 +398,15 @@
                     send_time: '2018-07-18 12:00',
                     content: '第三条评论',
                     isCommentAComment: false,
-                    quoteComment: {
-
-                    }
-                }, {
-                    headImg: require('../image/a.jpg'),
-                    ID: '333',
-                    Username: 'user2',
-                    userPage: '',
-                    send_time: '2018-07-17 15:00',
-                    content: '第二条评论',
-                    isCommentAComment: false,
-                    quoteComment: {
-
-                    }
-                }, {
-                    headImg: require('../image/a.jpg'),
-                    ID: '444',
-                    Username: 'user1',
-                    userPage: '',
-                    send_time: '2018-07-17 08:00',
-                    content: '第一条评论',
-                    isCommentAComment: false,
-                    quoteComment: {
-
-                    }
+                    quoteComment: {}
                 }],
-
             }
-
         },
         methods: {
             deleteClickHandler() {
 
                 this.axios.put('http://localhost:6001/api/ModifyMoment/DeleteMoment?email=' + this.$store.state.currentUserId +
-                        '&moment_id=' + this.$route.params.id)
+                    '&moment_id=' + this.$route.params.id)
                     .then((response) => {
                         if (response.data == 0) {
                             this.$message({
@@ -504,10 +483,10 @@
                 this.$refs.upload.submit(); //上传图片
 
                 this.axios.put('http://localhost:6001/api/ModifyMoment/ModifyMoment', {
-                        email: this.$store.state.currentUserId,
-                        moment_id: this.$route.params.id,
-                        content: this.moment.Content
-                    })
+                    email: this.$store.state.currentUserId,
+                    moment_id: this.$route.params.id,
+                    content: this.moment.Content
+                })
                     .then((response) => {
                         if (response.data == 0) {
                             this.$message({
@@ -541,16 +520,16 @@
                 if (this.moment.tags.length > 0) {
                     this.axios.get('http://localhost:6001/api/Tag/AddTag?Moment_Id=' + this.$route.params.id +
                         '&', {
-                            params: {
-                                TagNames: this.moment.tags,
-                            },
-                            paramsSerializer: function (params) {
-                                var Qs = require('qs');
-                                return Qs.stringify(params, {
-                                    arrayFormat: 'repeat'
-                                })
-                            }
-                        })
+                        params: {
+                            TagNames: this.moment.tags,
+                        },
+                        paramsSerializer: function (params) {
+                            var Qs = require('qs');
+                            return Qs.stringify(params, {
+                                arrayFormat: 'repeat'
+                            })
+                        }
+                    })
                 }
 
             },
@@ -599,7 +578,8 @@
                 this.$message.warning(
                     `最多可选 9 张图片，本次选择了 ${files.length} 张图片，共选择了 ${files.length + fileList.length} 张图片`);
             },
-            uploadOnError(e, file) {},
+            uploadOnError(e, file) {
+            },
 
             handleTagClose(tag) {
                 this.moment.tags.splice(this.moment.tags.indexOf(tag), 1);
@@ -634,7 +614,7 @@
             likeListHandler() {
                 this.likeListVisible = true
                 this.axios.get('http://localhost:6001/api/DisplayLikeList/GetLikeList?&moment_id=' + this.$route.params
-                        .id + '&email=' + this.$store.state.currentUserId)
+                    .id + '&email=' + this.$store.state.currentUserId)
                     .then(((response) => {
                         this.likeUsers = response.data;
                         this.likeUsers.forEach(element => {
@@ -668,9 +648,9 @@
                 if (!this.moment.collectState) {
                     this.axios.get('http://localhost:6001/api/Collect/InsertCollect?moment_id=' + this.moment
                             .ID +
-                            '&founder_id=' + this.$store.state.currentUserId_ID +
-                            '&name=' + '默认收藏夹'
-                        )
+                        '&founder_id=' + this.$store.state.currentUserId_ID +
+                        '&name=' + '默认收藏夹'
+                    )
                         .then((response) => {
                             if (response.data == 0) {
                                 this.collectSrc = require('../image/collect.png');
@@ -687,8 +667,8 @@
                 } else {
                     this.axios.get('http://localhost:6001/api/Collect/DeleteCollect?moment_id=' + this.moment
                             .ID +
-                            '&user_id=' + this.$store.state.currentUserId_ID
-                        )
+                        '&user_id=' + this.$store.state.currentUserId_ID
+                    )
                         .then((response) => {
                             if (response.data == 0) {
                                 this.collectSrc = require('../image/uncollect.png');
@@ -710,7 +690,7 @@
             likeHandler: function () {
                 // console.log(item)
                 this.axios.put('http://localhost:6001/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state
-                    .currentUserId +
+                        .currentUserId +
                     '&moment_id=' + this.moment.ID
                 )
 
@@ -742,41 +722,42 @@
             },
             forwardHandler: function () {
                 this.$confirm('', '确定转发？', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        center: true
-                    }).then(() => {
-                        this.axios.post('http://localhost:6001/api/Moment/ForwardMoment', {
-                                User_ID: this.$store.state.currentUserId_ID,
-                                Moment_ID: this.moment.ID
-                            })
-                            .then((response) => {
-                                if (response.data == 0) {
-                                    this.$message({
-                                        message: '转发成功！',
-                                        type: 'success'
-                                    });
-                                    this.messageWebsocketHandler(this.moment.SenderID, 3);
-                                    this.myfresh();
-                                } else if (response.data == 1) {
-                                    this.$message({
-                                        message: '不可以转发自己的动态哦！',
-                                        type: 'warning'
-                                    });
-                                } else {
-                                    this.$message.error('转发失败，请稍后重试！')
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    center: true
+                }).then(() => {
+                    this.axios.post('http://localhost:6001/api/Moment/ForwardMoment', {
+                        User_ID: this.$store.state.currentUserId_ID,
+                        Moment_ID: this.moment.ID
                     })
-                    .catch(() => {});
+                        .then((response) => {
+                            if (response.data == 0) {
+                                this.$message({
+                                    message: '转发成功！',
+                                    type: 'success'
+                                });
+                                this.messageWebsocketHandler(this.moment.SenderID, 3);
+                                this.myfresh();
+                            } else if (response.data == 1) {
+                                this.$message({
+                                    message: '不可以转发自己的动态哦！',
+                                    type: 'warning'
+                                });
+                            } else {
+                                this.$message.error('转发失败，请稍后重试！')
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                })
+                    .catch(() => {
+                    });
             },
             likeFollowHandler: function (user, FollowState) {
 
                 this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
-                        '&followedID=' + user.ID)
+                    '&followedID=' + user.ID)
                     .then((response) => {
                         if (response.data == 0) {
                             // this.$message({
@@ -815,7 +796,7 @@
                 console.log(user.FollowState);
 
                 this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
-                        '&followedID=' + user.SenderID)
+                    '&followedID=' + user.SenderID)
                     .then((response) => {
                         if (response.data == 0) {
                             // this.$message({
@@ -861,16 +842,14 @@
                 if (this.blogComment.comment) {
                     this.comments.unshift({
                         headImg: 'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state
-                            .currentUserId_ID +
+                                .currentUserId_ID +
                             '&type=2',
                         Username: this.$store.state.currentUsername,
                         userPage: '',
                         send_time: this.getNowFormatDate(),
                         content: this.blogComment.comment,
                         isCommentAComment: false,
-                        quoteComment: {
-
-                        }
+                        quoteComment: {}
                     });
                     this.moment.CommentNum++;
 
@@ -911,7 +890,7 @@
                 if (this.commentComment.comment) {
                     this.comments.unshift({
                         headImg: 'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state
-                            .currentUserId_ID +
+                                .currentUserId_ID +
                             '&type=2',
                         Username: this.$store.state.currentUsername,
                         userPage: '',
@@ -967,9 +946,9 @@
             this.$nextTick(() => {
                 this.hackReset = true
             })
-            console.log('route.params', this.$route.params.id)
+
             this.axios.get('http://localhost:6001/api/Picture/FirstGet?id=' + this.$route.params.id +
-                    '&type=1')
+                '&type=1')
                 .then((response) => {
                     this.imgList = [];
                     console.log('ge')
@@ -1000,18 +979,10 @@
                     console.log(error);
                 });
             //
-            this.axios.get('http://localhost:6001/api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
-                    '&MomentID=' + this.$route.params.id)
+            this.axios.get('http://localhost:6001/api/moment/detail?userId=' + this.$store.state.currentUserId_ID +
+                '&momentId=' + this.$route.params.id)
                 .then((response) => {
-
-                    this.moment = response.data.moment;
-                    this.moment.Username = response.data.user_username;
-                    // this.moment.displayDelete =
-
-                    this.userHeadImg = 'http://localhost:6001/api/Picture/FirstGet?id=' + this.moment.SenderID +
-                        '&type=2';
-
-
+                    this.moment = response.data.t;
                     if (response.data.FollowState == 0) {
                         this.moment.FollowState = true
                         var string = '已关注'
@@ -1153,9 +1124,9 @@
 
     .slide-fade-enter,
     .slide-fade-leave-to
-    /* .slide-fade-leave-active for below version 2.1.8 */
+        /* .slide-fade-leave-active for below version 2.1.8 */
 
-        {
+    {
         transform: translateX(10px);
         opacity: 0;
     }
