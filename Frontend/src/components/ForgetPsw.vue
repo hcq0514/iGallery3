@@ -187,7 +187,7 @@
         });
 
       },
-      finishHandler: function (formName) {
+      addCollection: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.axios.put('http://localhost:6001/api/user/ChangePassword?email=' + this.email + '&NewPassword=' +

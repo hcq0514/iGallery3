@@ -209,7 +209,7 @@
             onCancel: function () {
                 this.$router.push('personalpage/' + this.$store.state.currentUserId_ID);
             },
-            finishHandler: function (formName) {
+            addCollection: function (formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         console.log('adsfaadfgadsgs')

@@ -199,7 +199,7 @@
           }
         })
       },
-      finishHandler: function (formName) {
+      addCollection: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$axios.post('/users', qs.stringify({
