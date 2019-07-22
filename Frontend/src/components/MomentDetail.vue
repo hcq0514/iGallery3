@@ -420,7 +420,6 @@
             refresh() {
                 history.go(0)
                 this.$store.commit('addCurrentUsername', this.getCookie(Username));
-                this.$store.commit('addCurrentUserPassword', this.getCookie(Password));
                 this.$store.commit('addCurrentUserBio', this.getCookie(Bio));
                 this.$store.commit('addCurrentUserPhoto', this.getCookie(Photo));
             },

@@ -227,8 +227,6 @@
                                             let result = response.data;
                                             // this.resultHandler(result);
                                             if (result) {
-                                                this.$store.commit('addCurrentUserPassword', this.ruleForm2.checkPass);
-
                                                 this.$message({
                                                     message: '密码重置成功！将在三秒后跳转至登录界面,重新登录！',
                                                     type: 'success'
@@ -256,8 +254,6 @@
             },
             resultHandler: function (result) {
                 if (result) {
-                    // this.$store.commit('addCurrentUserPassword', this.ruleForm.email);
-
                     this.$message({
                         message: '密码重置成功！将在三秒后跳转至登录界面,重新登录！',
                         type: 'success'

@@ -10,7 +10,6 @@ export default new Vuex.Store({
     state: {
         currentUserId: '',
         currentUsername: '',
-        currentUserPassword:'',
         currentUserBio: '',
         currentUserPhoto: '',
     },
@@ -18,17 +17,11 @@ export default new Vuex.Store({
         addCurrentUserId(state, currentId) {
             state.currentUserId = currentId;
         },
-        addCurrentUserId_ID(state, currentId) {
-            state.currentUserId = currentId;
-        },
         addCurrentUsername(state, username) {
             state.currentUsername = username;
         },
         addCurrentUserPhoto(state, photo) {
             state.currentUserPhoto = photo;
-        },
-        addCurrentUserPassword(state, password) {
-            state.currentUserPassword = password;
         },
         addCurrentUserBio(state, bio) {
             state.currentUserBio = bio;
