@@ -58,6 +58,7 @@
 </template>
 
 <script>
+    import * as userApi from '../api/user/user'
 
     export default {
         name: 'Login',
@@ -101,51 +102,23 @@
                 this.vedioCanPlay = true
             },
             handleLogin(formName) {
-                this.$store.commit('addCurrentUsername', "hcq");
-                this.$store.commit('addCurrentUserPassword', "11111111");
-                this.$store.commit('addCurrentUserBio', "hello");
-                this.$store.commit('addCurrentUserPhoto', "https://ibb.co/Jcz9qmK");
-                this.$router.push('/main/user/1');
-
-                // this.$refs[formName].validate((valid) => {
-                //     if (valid) {
-                //         this.axios.post('http://localhost:6020/user/login', {
-                //             email: this.ruleForm.email,
-                //             password: this.ruleForm.password,
-                //         })
-                //             .then((response) => {
-                //                 if (response.data.success == 'false') {
-                //                     this.$message.error(response.data.message);
-                //                 } else {
-                //                     this.$store.commit('addCurrentUserId', this.ruleForm.email);
-                //                     this.$store.commit('addCurrentUserId_ID', response.data.t.id);
-                //                     this.$router.push('/main/user/' + this.ruleForm.email);
-                //
-                //                     this.axios.get("http://localhost:6010/user/getUserInfo?email=" + this.$store.state.currentUserId)
-                //                         .then((response) => {
-                //                             this.$store.commit('addCurrentUsername', response.data.Username);
-                //                             this.$store.commit('addCurrentUserPassword', response.data.Password);
-                //                             this.$store.commit('addCurrentUserBio', response.data.Bio);
-                //                             this.$store.commit('addCurrentUserPhoto', response.data.Photo);
-                //
-                //                             var exp = new Date();
-                //                             exp.setTime(exp.getTime() + 1000 * 60 * 60 * 24); //这里表示保存24小时
-                //                             this.document.cookie = "Username=" + response.data.Username + ";Password=" + response.data
-                //                                     .Password +
-                //                                 ";Bio=" + response.data.Bio + ";Photo=" + response.data.Photo + ";expires=" + exp.toGMTString();
-                //
-                //                             console.log(this.$store.state)
-                //                         })
-                //
-                //                 }
-                //             })
-                //             .catch((error) => {
-                //                 console.log(error);
-                //             })
-                //     } else {
-                //         return true;
-                //     }
-                // });
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        userApi.login(this.ruleForm).then((response) => {
+                            if (!response.success) {
+                                this.$message.error(response.message);
+                            } else {
+                                this.$store.commit('addCurrentUsername', response.data.username);
+                                // this.$store.commit('addCurrentUserPassword', response.data().username);
+                                this.$store.commit('addCurrentUserBio', response.data.bio);
+                                this.$store.commit('addCurrentUserPhoto', response.data.photoUrl);
+                                this.$router.push('/main/user/'+response.data.id);
+                            }
+                        })
+                    } else {
+                        return true;
+                    }
+                });
             },
             toForgetPsw: function () {
                 this.$router.push('/forgetpsw');

@@ -4,6 +4,11 @@ let apiUrl = 'http://localhost:6001/api/user/'
 
 
 //获取用户
+export const login = (params) => {
+    return http.requestPost(apiUrl + "login",params)
+};
+
+//获取用户
 export const getUserById = (userId) => {
     return http.requestQuickGet(apiUrl + userId)
 };

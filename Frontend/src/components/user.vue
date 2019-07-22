@@ -38,7 +38,7 @@
                     </el-row>
                     <!-- <div class="inset-shadow"> -->
                     <el-row style="overflow-y:auto;overflow-x:hidden;height:340px;width:260px;margin-bottom:12px;">
-                        <el-row v-if="followUsers.length>0" :key="index" v-for="(followUser,index) in followUsers"
+                        <el-row v-if="followUsers!=undefined && followUsers.length>0" :key="index" v-for="(followUser,index) in followUsers"
                                 type="flex" align="middle" style="margin-bottom:12px">
                             <el-col>
                                 <div class="user-img border">
@@ -62,7 +62,7 @@
 
                             </el-col>
                         </el-row>
-                        <el-row v-if="followUsers.length==0"
+                        <el-row v-if="followUsers==undefined ||followUsers.length==0"
                                 style="font-size:13px;color:#777;text-align:center;margin-left:-40px">
                             暂无关注用户
                         </el-row>

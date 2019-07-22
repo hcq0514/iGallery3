@@ -2,7 +2,7 @@ require('es6-promise').polyfill()
 import axios from 'axios'
 axios.defaults.withCredentials = true //跨域
 axios.defaults.timeout = 10000
-axios.defaults.headers.post['Content-Type'] = 'application/x-www=form-urlencoded'
+axios.defaults.headers.post['Content-Type'] = 'application/x-www=form-urlencoded';
 //axios.defaults.headers['Authorization'] = ''
 // 请求之前拦截
 /*axios.interceptors.request.use(config => {

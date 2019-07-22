@@ -1010,12 +1010,9 @@
             this.axios.get('http://192.168.43.249:54468/api/HomePage/GetMyMoments?Sender_id=' + to.params.id)
                 .then((response) => {
                     this.moments = response.data;
-                    console.log(this.moments);
-
                     (this.moments).forEach(element => {
                         // element.ID = response.data.ID[index]
                         // index++;
-                        console.log(this.moments)
                         element.momentID = element.ID
                         this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
                             .then((response) => {
@@ -1025,7 +1022,7 @@
                     })
                 });
             this.followUsers = [];
-            this.followNum = this.followUsers.length
+            this.followNum = this.followUsers.length;
 
             this.axios.get('http://localhost:6001/api/user/FollowList?userID=' + to.params.id)
                 .then((response) => {
