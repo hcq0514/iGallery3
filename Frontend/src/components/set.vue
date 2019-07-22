@@ -166,7 +166,7 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         this.axios.put('http://localhost:6001/api/user/modifyUsernameAndBio', {
-                            id: this.$store.state.currentUserId_ID,
+                            id: this.$store.state.currentUserId,
                             username: this.ruleForm.name,
                             bio: this.ruleForm.desc
                         }).then((response) => {
@@ -207,7 +207,7 @@
                 }
             },
             onCancel: function () {
-                this.$router.push('personalpage/' + this.$store.state.currentUserId_ID);
+                this.$router.push('personalpage/' + this.$store.state.currentUserId);
             },
             addCollection: function (formName) {
                 this.$refs[formName].validate((valid) => {

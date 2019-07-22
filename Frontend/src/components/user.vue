@@ -12,14 +12,13 @@
                         <el-col>
                             <div class="user-img ">
                                 <img class="user-img img-border hover-cursor" :src="this.$store.state.currentUserPhoto +
-              '&type=2'+'&Rand=' + Math.random()" alt="头像" @click="jumpToUser($store.state.currentUserId_ID)"/>
+              '&type=2'+'&Rand=' + Math.random()" alt="头像" @click="jumpToUser($store.state.currentUserId)"/>
                             </div>
                         </el-col>
-                        <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
                         <el-col style="margin-left:-70%;width:50%;overflow:hidden">
                             <el-row>
                                 <div style="font-size:16px; font-weight:bold" class="hover-cursor"
-                                     @click="jumpToUser($store.state.currentUserId_ID)">
+                                     @click="jumpToUser($store.state.currentUserId)">
                                     {{this.$store.state.currentUsername}}
                                 </div>
                             </el-row>
@@ -28,10 +27,8 @@
                                     {{this.$store.state.currentUserBio}}
                                 </div>
                             </el-row>
-
                         </el-col>
                     </el-row>
-                    <!-- </div> -->
                     <hr class="hr"/>
                     <el-row style="color:#999999;font-weight:bold;margin-bottom:10px;width:280px;">
                         关注用户
@@ -48,7 +45,6 @@
                                     />
                                 </div>
                             </el-col>
-                            <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
                             <el-col style="margin-left:-70%;width:50%;overflow:hidden">
                                 <el-row>
                                     <div style="font-size:16px; font-weight:bold" class="hover-cursor"
@@ -59,7 +55,6 @@
                                     <div style="font-size:14px; color:#999999" class="self-intro">{{followUser.bio}}
                                     </div>
                                 </el-row>
-
                             </el-col>
                         </el-row>
                         <el-row v-if="followUsers==undefined ||followUsers.length==0"
@@ -67,14 +62,12 @@
                             暂无关注用户
                         </el-row>
                     </el-row>
-                    <!-- </div> -->
                     <hr class="hr outset-shadow"/>
-
                     <el-row style="font-size:14px;margin-bottom:5px">
-                        关注 iGallery，分享精彩视界
+                        想吃软饭
                     </el-row>
                     <el-row style="font-size:14px">
-                        © 2018 IGALLERY Uni
+                        © 2019 Hcq
                     </el-row>
                 </el-row>
             </el-col>
@@ -88,11 +81,9 @@
                                     <div class="small-user-img small-border">
                                         <img class="small-user-img small-img-border hover-cursor"
                                              :src="moment.Photo+'&Rand=' + Math.random()" alt="头像"
-                                             @click="jumpToUser(moment.moment.SenderID)"
-                                        />
+                                             @click="jumpToUser(moment.moment.SenderID)"/>
                                     </div>
                                 </el-col>
-                                <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
                                 <el-col :span="6">
                                     <el-row>
                                         <span style="font-size:16px; font-weight:bold hover-cursor"
@@ -137,7 +128,6 @@
                         <el-col style="padding:5px 15px">
                             <!-- 简介 -->
                             <el-row style="font-size:14px">
-                                <!-- {{moment.moment.Content}} -->
                                 {{moment.moment.Content}}
                             </el-row>
                             <!-- tag -->
@@ -148,7 +138,6 @@
                             <!-- comments -->
 
                             <el-row v-for="(comment,index) in moment.comments" :key="index" style="font-size:13px;">
-
                                 <span style="display:inline-block;margin:2px 0;color:#000;font-weight:600"
                                       class="hover-cursor" @click="jumpToUser(comment.sender.ID)">{{comment.sender_username}}</span>
                                 <span>{{comment.content}}</span>
@@ -159,7 +148,6 @@
                             <el-row class="moment-time">{{moment.moment.Time}}</el-row>
                             <div style="border-top:1px solid rgb(235,238,245)"></div>
                             <el-row type="flex" justify="space-between" style="margin:10px 0">
-
                                 <input placeholder="添加评论..." v-model="moment.newComment"
                                        style="border:0;padding:5px;width:100%" @keyup.enter="commentHandler(moment)">
                             </el-row>
@@ -170,7 +158,6 @@
                     </el-row>
                 </el-col>
             </el-row>
-
         </el-row>
 
         <!-- 更多操作 -->
@@ -628,8 +615,6 @@
             window.removeEventListener('scroll', this.handleScroll)
         },
         beforeCreate() {
-
-            console.log('beforecreate');
         },
         created() {
             //初始化用户关注用户
@@ -651,7 +636,7 @@
                     Page: 1,
                 }
             }),
-                this.axios.get('http://localhost:6001/api/user/FollowList?userID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://localhost:6001/api/user/FollowList?userID=' + this.$store.state.currentUserId)
             ])
                 .then(this.axios.spread((res1, res2) => {
                     this.totalMoments = res1.data;
@@ -797,7 +782,7 @@
             collectHandler: function (moment) {
                 if (moment.collected == 0) {
                     this.axios.get('http://192.168.43.249:54468/api/Collect/DeleteCollect?moment_id=' + moment.moment.ID +
-                        '&user_id=' + this.$store.state.currentUserId_ID
+                        '&user_id=' + this.$store.state.currentUserId
                     )
                         .then((response) => {
                             if (response.data == 0) {
@@ -813,7 +798,7 @@
                     // moment.collected = 1
                 } else {
                     this.axios.get('http://192.168.43.249:54468/api/Collect/InsertCollect?moment_id=' + moment.moment.ID +
-                        '&founder_id=' + this.$store.state.currentUserId_ID +
+                        '&founder_id=' + this.$store.state.currentUserId +
                         '&name=' + '默认收藏夹'
                     )
                         .then((response) => {
@@ -837,7 +822,7 @@
                     center: true
                 }).then(() => {
                     this.axios.post('http://192.168.43.249:54468/api/Moment/ForwardMoment', {
-                        User_ID: this.$store.state.currentUserId_ID,
+                        User_ID: this.$store.state.currentUserId,
                         Moment_ID: moment.moment.ID
                     })
                         .then((response) => {
@@ -876,7 +861,7 @@
             commentHandler: function (moment) {
                 var formdata = new FormData();
                 formdata.append('Mid', moment.moment.ID);
-                formdata.append('Sender_id', this.$store.state.currentUserId_ID);
+                formdata.append('Sender_id', this.$store.state.currentUserId);
                 formdata.append('Content', moment.newComment);
                 formdata.append('Send_time', '');
                 formdata.append('Quote_comment_id', '');

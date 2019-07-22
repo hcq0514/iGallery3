@@ -430,10 +430,10 @@
             next(vm => {
                 vm.axios.all([vm.axios.get('http://localhost:6001/api/Search/Search_user?keyword=' + vm.$route
                             .params
-                            .keyword + '&user_id=' + vm.$store.state.currentUserId_ID),
+                            .keyword + '&user_id=' + vm.$store.state.currentUserId),
                         vm.axios.get('http://localhost:6001/api/Search/Search_all?keyword=' + vm.$route
                             .params.keyword +
-                            '&user_id=' + vm.$store.state.currentUserId_ID)
+                            '&user_id=' + vm.$store.state.currentUserId)
                     ])
                     .then(vm.axios.spread((res1, res2) => {
                         //用户
@@ -441,7 +441,7 @@
                             vm.users = res1.data;
                             //关注状态
                             vm.users.forEach(element => {
-                                if (element.ID == vm.$store.state.currentUserId_ID) {
+                                if (element.ID == vm.$store.state.currentUserId) {
                                     Vue.set(element, 'showFollowBtn', false);
                                 } else {
                                     Vue.set(element, 'showFollowBtn', true);
@@ -537,10 +537,10 @@
         created() {
             //用户
             this.axios.all([this.axios.get('http://localhost:6001/api/Search/Search_user?keyword=' + this.$route.params
-                        .keyword + '&user_id=' + this.$store.state.currentUserId_ID),
+                        .keyword + '&user_id=' + this.$store.state.currentUserId),
                     this.axios.get('http://localhost:6001/api/Search/Search_all?keyword=' + this.$route.params
                         .keyword +
-                        '&user_id=' + this.$store.state.currentUserId_ID)
+                        '&user_id=' + this.$store.state.currentUserId)
                 ])
                 .then(this.axios.spread((res1, res2) => {
                     //用户
@@ -548,7 +548,7 @@
                         this.users = res1.data;
                         //关注状态
                         this.users.forEach(element => {
-                            if (element.ID == this.$store.state.currentUserId_ID) {
+                            if (element.ID == this.$store.state.currentUserId) {
                                 Vue.set(element, 'showFollowBtn', false);
                             } else {
                                 Vue.set(element, 'showFollowBtn', true);
@@ -638,7 +638,7 @@
         },
         methods: {
             followUserHandler: function (user) {
-                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId +
                         '&followedID=' + user.ID)
                     .then((response) => {
                         if (response.data == 0) {
@@ -775,9 +775,9 @@
                 self.loadingPage = false;
             }, 1500)
             this.axios.all([this.axios.get('http://localhost:6001/api/Search/Search_user?keyword=' + to.params
-                        .keyword + '&user_id=' + this.$store.state.currentUserId_ID),
+                        .keyword + '&user_id=' + this.$store.state.currentUserId),
                     this.axios.get('http://localhost:6001/api/Search/Search_all?keyword=' + to.params.keyword +
-                        '&user_id=' + this.$store.state.currentUserId_ID)
+                        '&user_id=' + this.$store.state.currentUserId)
                 ])
                 .then(this.axios.spread((res1, res2) => {
                     //用户
@@ -785,7 +785,7 @@
                         this.users = res1.data;
                         //关注状态
                         this.users.forEach(element => {
-                            if (element.ID == this.$store.state.currentUserId_ID) {
+                            if (element.ID == this.$store.state.currentUserId) {
                                 Vue.set(element, 'showFollowBtn', false);
                             } else {
                                 Vue.set(element, 'showFollowBtn', true);

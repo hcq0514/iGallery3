@@ -11,7 +11,7 @@
 
                     <el-row>
                         <el-col :span="6" :offset="1" style="margin:20px;padding-left:30px">
-                            <!--<el-upload v-if="$route.params.id==$store.state.currentUserId_ID" class="avatar-uploader"-->
+                            <!--<el-upload v-if="$route.params.id==$store.state.currentUserId" class="avatar-uploader"-->
                             <!--action="https://jsonplaceholder.typicode.com/posts/"-->
                             <!--:show-file-list="false" :on-success="handleAvatarSuccess"-->
                             <!--:before-upload="beforeAvatarUpload" :on-progress="uploadOnProgress">-->
@@ -29,7 +29,7 @@
                             <!--</div>-->
                             <!--</el-upload>-->
 
-                            <!--<img v-if="$route.params.id!=$store.state.currentUserId_ID"-->
+                            <!--<img v-if="$route.params.id!=$store.state.currentUserId"-->
                             <!--:src="headUrl+'&Rand=' + Math.random()" class="headImg" alt="头像"> -->
                             <!---->
                             <img src="https://i.ibb.co/515PkG6/20190715145133.jpg" class="headImg" alt="头像">
@@ -63,7 +63,7 @@
                                                     <el-button plain size="small"
                                                                @click="followHandler(followUser,followUser.FollowState)"
                                                                :class="{followed:followUser.FollowState}"
-                                                               v-if="followUser.ID!=$store.state.currentUserId_ID">
+                                                               v-if="followUser.ID!=$store.state.currentUserId">
                                                         {{followUser.followState}}
                                                     </el-button>
                                                 </el-col>
@@ -92,7 +92,7 @@
                                                     <el-button plain size="small"
                                                                @click="followHandler(fanUser,fanUser.FollowState)"
                                                                :class="{followed:fanUser.FollowState}"
-                                                               v-if="fanUser.ID!=$store.state.currentUserId_ID">
+                                                               v-if="fanUser.ID!=$store.state.currentUserId">
                                                         {{fanUser.followState}}
                                                     </el-button>
                                                 </el-col>
@@ -107,10 +107,10 @@
                         </el-col>
                         <el-col :span="4" style="height:100%">
                             <el-row type="flex" align="middle" justify="center" style="height:100%;margin-top:25%">
-                                <el-button v-if="$route.params.id!=$store.state.currentUserId_ID" icon="el-icon-message"
+                                <el-button v-if="$route.params.id!=$store.state.currentUserId" icon="el-icon-message"
                                            style="width:50px;height:50px" @click="messageClickHandler"
                                            plain type="primary" circle></el-button>
-                                <el-button v-if="$route.params.id!=$store.state.currentUserId_ID" icon="el-icon-view"
+                                <el-button v-if="$route.params.id!=$store.state.currentUserId" icon="el-icon-view"
                                            style="margin-left:15px;width:50px;height:50px;"
                                            :class="{background_white: !FollowState}" @click="followClickHandler" plain
                                            type="primary" circle></el-button>
@@ -125,10 +125,10 @@
                             <span style="font-size:12px;color:#000009"
                                   v-if="moments!=undefined">{{moments.length}}</span>
                         </el-menu-item>
-                        <el-menu-item index="favors" v-if="$route.params.id==$store.state.currentUserId_ID">收藏夹
+                        <el-menu-item index="favors" v-if="$route.params.id==$store.state.currentUserId">收藏夹
                             <span style="font-size:12px;color:#000009">{{favors.length}}</span>
                         </el-menu-item>
-                        <el-menu-item index="set" v-if="$route.params.id==$store.state.currentUserId_ID">设置
+                        <el-menu-item index="set" v-if="$route.params.id==$store.state.currentUserId">设置
                         </el-menu-item>
                     </el-menu>
                 </el-row>
@@ -145,7 +145,7 @@
                         </el-col>
                     </el-col>
                 </el-row>
-                <el-row v-if="isFavors&&$route.params.id==$store.state.currentUserId_ID">
+                <el-row v-if="isFavors&&$route.params.id==$store.state.currentUserId">
                     <el-col :span="5">
                         <el-row>
                             <el-row style="margin:10px">
@@ -624,7 +624,7 @@
                 window.ws.send('/' + path + ' ' + state);
             },
             followClickHandler() {
-                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId +
                     '&followedID=' + this.$route.params.id)
                     .then((response) => {
                         if (response.data == 0) {
@@ -648,7 +648,7 @@
             moveHandler(collectionName, index, collect) {
                 this.axios.get(' http://localhost:6001/api/Collection/MoveMomentToAnotherCollection?moment_id=' + collect
                         .momentID +
-                    '&founder_id=' + this.$store.state.currentUserId_ID +
+                    '&founder_id=' + this.$store.state.currentUserId +
                     '&new_collection_name=' + collectionName
                 )
                     .then((response) => {
@@ -697,7 +697,7 @@
                 }; //添加请求头
 
                 this.headUrl = file.raw;
-                this.axios.post('http://localhost:6001/api/Picture/Save?id=' + this.$store.state.currentUserId_ID +
+                this.axios.post('http://localhost:6001/api/Picture/Save?id=' + this.$store.state.currentUserId +
                     '&type=2',
                     formdata1,
                     config).then((response) => { //这里的/xapi/upimage为接口
@@ -733,7 +733,7 @@
                     user.followState = '关注';
                 }
                 user.FollowState = !user.FollowState;
-                this.axios.get('http://localhost:6001/api/users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://localhost:6001/api/users/Follow?followID=' + this.$store.state.currentUserId +
                     '&followedID=' + user.id)
                     .then((response) => {
                         if (response.data == 0) {
@@ -851,7 +851,7 @@
             addCollection: function (collectionName) {
                 this.dialogFormVisible = false;
                 this.axios.get('http://localhost:6001/api/collect/addCollection?collectionName=' + this.ruleform.fname +
-                    '&userId=' + this.$store.state.currentUserId_ID
+                    '&userId=' + this.$store.state.currentUserId
                 ).then((response) => {
                         if (!response.success) {
                             this.$message({
@@ -955,7 +955,7 @@
             }
         },
         created() {
-            this.axios.get('http://localhost:6001/api/user/FollowState?from_id=' + this.$store.state.currentUserId_ID +
+            this.axios.get('http://localhost:6001/api/user/FollowState?from_id=' + this.$store.state.currentUserId +
                 '&to_id=' + this.$route.params.id)
                 .then((response) => {
                     if (response.data == 0) {
@@ -993,7 +993,7 @@
         beforeRouteUpdate(to, from, next) {
             this.followListVisible = false;
             this.fanListVisible = false;
-            this.axios.get('http://localhost:6001/api/user/FollowState?from_id=' + this.$store.state.currentUserId_ID +
+            this.axios.get('http://localhost:6001/api/user/FollowState?from_id=' + this.$store.state.currentUserId +
                 '&to_id=' + to.params.id)
                 .then((response) => {
                     if (response.data = 0) {
@@ -1079,7 +1079,7 @@
                     });
                 })
             this.favors = []
-            this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnUserCollections?user_id=' + this.$store.state.currentUserId_ID)
+            this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnUserCollections?user_id=' + this.$store.state.currentUserId)
                 .then((response) => {
                     // this.favors.collectionName = response.data.NAME;
                     let totalFavorName = response.data;
@@ -1098,7 +1098,7 @@
 
                         this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' +
                             this
-                                .$store.state.currentUserId_ID + '&name=' + element.Name)
+                                .$store.state.currentUserId + '&name=' + element.Name)
                             .then((response) => {
                                 temp.collectNum = response.data
                             })
@@ -1108,7 +1108,7 @@
 
                     this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this
                             .$store
-                            .state.currentUserId_ID +
+                            .state.currentUserId +
                         '&name=' + '默认收藏夹')
                         .then((response) => {
                             this.defaultCollectNum = response.data
@@ -1129,7 +1129,7 @@
 
 
             this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnCollectionContentID?FounderID=' + this.$store.state
-                    .currentUserId_ID +
+                    .currentUserId +
                 '&Name=' + '默认收藏夹')
                 .then((response) => {
                     var momentIDList = response.data;

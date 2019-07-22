@@ -109,7 +109,7 @@
                                 this.$message.error(response.message);
                             } else {
                                 this.$store.commit('addCurrentUsername', response.data.username);
-                                // this.$store.commit('addCurrentUserPassword', response.data().username);
+                                this.$store.commit('addCurrentUserPassword', response.data.username);
                                 this.$store.commit('addCurrentUserBio', response.data.bio);
                                 this.$store.commit('addCurrentUserPhoto', response.data.photoUrl);
                                 this.$router.push('/main/user/'+response.data.id);

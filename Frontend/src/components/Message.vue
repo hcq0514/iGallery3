@@ -56,7 +56,7 @@
                                 <div class="dialog-inner" id="dialog-inner">
                                     <div v-if="messages.length" class="content" v-for="(message,index) in messages" :key="index">
                                         <div v-if="message.identity==0">
-                                            <img :src="photo+'&Rand=' + Math.random()" alt="" @click="jumpToUser($store.state.currentUserId_ID)" class="float-right header-img">
+                                            <img :src="photo+'&Rand=' + Math.random()" alt="" @click="jumpToUser($store.state.currentUserId)" class="float-right header-img">
                                             <div class="message-limit float-right">
 
                                                 <div class="message-box-right">
@@ -347,7 +347,7 @@
             }
         },
         created() {
-            this.photo = 'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+            this.photo = 'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state.currentUserId +
                 '&type=2';
             //一开始只请求私信的相关数据
             this.messageInit();
@@ -402,7 +402,7 @@
             },
             sendMessage() {
                 this.axios.post('http://localhost:6001/api/Message/SendMessage', {
-                        Sender_ID: this.$store.state.currentUserId_ID,
+                        Sender_ID: this.$store.state.currentUserId,
                         Receiver_ID: this.currentTalker.ID,
                         Send_Time: this.getNowFormatDate(),
                         Content: this.messageInput
@@ -415,7 +415,7 @@
                                 '<div class="content">' +
                                 '<div>' +
                                 '<img src="' + this.photo +
-                                '" alt="" @click="jumpToUser(this.$store.state.currentUserId_ID)" class="float-right header-img" />' +
+                                '" alt="" @click="jumpToUser(this.$store.state.currentUserId)" class="float-right header-img" />' +
                                 '<div class="message-limit float-right">' +
                                 '<div class="message-box-right" ><span>' + this.messageInput + '</span></div>' +
                                 '<i class="bubble-right"></i>' +
@@ -500,7 +500,7 @@
             },
             messageInit: function () {
                 //请求私信用户列表
-                this.axios.get('http://localhost:6001/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://localhost:6001/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId)
                     .then((response) => {
                         this.messageUserList = response.data;
                         this.messageUserList.forEach(element => {
@@ -512,7 +512,7 @@
                             //最后一条私信内容
                             this.axios.get('http://localhost:6001/api/Message/GetMessage', {
                                     params: {
-                                        Sender_ID: this.$store.state.currentUserId_ID,
+                                        Sender_ID: this.$store.state.currentUserId,
                                         Receiver_ID: element.ID
                                     }
                                 })
@@ -591,7 +591,7 @@
             },
             questUsers: function () {
                 //请求私信用户列表
-                this.axios.get('http://localhost:6001/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://localhost:6001/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId)
                     .then((response) => {
                         this.messageUserList = response.data;
                         this.messageUserList.forEach(element => {
@@ -603,7 +603,7 @@
                             //最后一条私信内容
                             this.axios.get('http://localhost:6001/api/Message/GetMessage', {
                                     params: {
-                                        Sender_ID: this.$store.state.currentUserId_ID,
+                                        Sender_ID: this.$store.state.currentUserId,
                                         Receiver_ID: element.ID
                                     }
                                 })
@@ -629,7 +629,7 @@
             questMessages: function () {
                 this.axios.get('http://localhost:6001/api/Message/GetMessage', {
                         params: {
-                            Sender_ID: this.$store.state.currentUserId_ID,
+                            Sender_ID: this.$store.state.currentUserId,
                             Receiver_ID: this.currentTalker.ID
                         }
                     })
@@ -656,7 +656,7 @@
                 dialog.scrollTop = dialog.scrollHeight;
             },
             questFollows: function () {
-                this.axios.get('http://localhost:6001/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://localhost:6001/api/Users/FollowList?userID=' + this.$store.state.currentUserId)
                     .then((response) => {
                         if (response.data.length) {
                             this.messageFollow = response.data;
@@ -676,7 +676,7 @@
                     });
             },
             questOthers: function (api) {
-                this.axios.get('http://localhost:6001/api/' + api + '?user_id=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://localhost:6001/api/' + api + '?user_id=' + this.$store.state.currentUserId)
                     .then((response) => {
                         if (response.data.m_Item1 != null) {
                             let moments = response.data.m_Item1;

@@ -8,19 +8,18 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        currentUserId: '1',
-        currentUserId_ID: '1',
-        currentUsername: 'hcq',
-        currentUserPassword:'11111111',
-        currentUserBio: 'hello',
-        currentUserPhoto: 'https://i.ibb.co/515PkG6/20190715145133.jpg',
+        currentUserId: '',
+        currentUsername: '',
+        currentUserPassword:'',
+        currentUserBio: '',
+        currentUserPhoto: '',
     },
     mutations: {
         addCurrentUserId(state, currentId) {
             state.currentUserId = currentId;
         },
         addCurrentUserId_ID(state, currentId) {
-            state.currentUserId_ID = currentId;
+            state.currentUserId = currentId;
         },
         addCurrentUsername(state, username) {
             state.currentUsername = username;

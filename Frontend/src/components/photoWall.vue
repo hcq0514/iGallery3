@@ -332,7 +332,7 @@
       },
       jumpToUser: function (ID) {
         // console.log('ge')
-        // if (ID == this.$store.state.currentUserId_ID) {
+        // if (ID == this.$store.state.currentUserId) {
         //   this.$router.push('/main/personalpage/');
         // } else {
         this.$router.push('/main/personalpage/' + ID);

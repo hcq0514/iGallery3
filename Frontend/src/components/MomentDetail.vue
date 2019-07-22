@@ -43,7 +43,7 @@
                                                         <el-button plain size="small"
                                                                    @click="likeFollowHandler(likeUser,likeUser.FollowState)"
                                                                    :class="{followed:likeUser.FollowState}"
-                                                                   v-if="likeUser.ID!=$store.state.currentUserId_ID">
+                                                                   v-if="likeUser.ID!=$store.state.currentUserId">
                                                             {{likeUser.followState}}
                                                         </el-button>
                                                         <!--  -->
@@ -127,7 +127,7 @@
                                 <el-col :span="20">
                                     <time class="time">{{ comment.send_time }}</time>
                                 </el-col>
-                                <el-col :span="1" v-show="moment.SenderID==$store.state.currentUserId_ID">
+                                <el-col :span="1" v-show="moment.SenderID==$store.state.currentUserId">
                                     <el-button type="text" @click="deleteAComment(comment)">删除</el-button>
                                 </el-col>
                                 <el-col :span="1">
@@ -181,15 +181,15 @@
                                         <span class="hover-cursor" @click="jumpToUser(moment.moment.SenderID)">{{moment.username}}</span>
                                     </el-col>
                                     <el-col :span="4" :offset="4">
-                                        <el-button v-if="moment.userId!=$store.state.currentUserId_ID" plain
+                                        <el-button v-if="moment.userId!=$store.state.currentUserId" plain
                                                    size="small" @click="followHandler(moment,moment.FollowState)"
                                                    :class="{followed:moment.FollowState}">{{moment.followState}}
                                         </el-button>
                                         <el-row type="flex" align="middle">
-                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID"
+                                            <el-button v-if="moment.SenderID==$store.state.currentUserId"
                                                        icon="el-icon-edit" circle style="margin-left:0px"
                                                        @click="modifyClickHandler"></el-button>
-                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID"
+                                            <el-button v-if="moment.SenderID==$store.state.currentUserId"
                                                        icon="el-icon-delete" circle style="margin-left:10px"
                                                        @click="deleteClickHandler"></el-button>
                                         </el-row>
@@ -223,7 +223,7 @@
                            :show-close="false" top="10px">
                     <el-row>
                         <el-col :span="3" :offset="0">
-                            <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'"
+                            <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' +this.$store.state.currentUserId +'&type=2'"
                                  alt="headImg"
                                  style="width:80px;height:80px;border-radius:80px;">
                         </el-col>
@@ -410,7 +410,7 @@
                                 message: '删除成功！',
                                 type: 'success'
                             });
-                            this.$router.push('/main/user/' + this.$store.state.currentUserId_ID);
+                            this.$router.push('/main/user/' + this.$store.state.currentUserId);
 
                         } else {
                             this.$message.error('删除失败，服务器内部错误，请重试。');
@@ -645,7 +645,7 @@
                 if (!this.moment.collectState) {
                     this.axios.get('http://localhost:6001/api/Collect/InsertCollect?moment_id=' + this.moment
                             .ID +
-                        '&founder_id=' + this.$store.state.currentUserId_ID +
+                        '&founder_id=' + this.$store.state.currentUserId +
                         '&name=' + '默认收藏夹'
                     )
                         .then((response) => {
@@ -664,7 +664,7 @@
                 } else {
                     this.axios.get('http://localhost:6001/api/Collect/DeleteCollect?moment_id=' + this.moment
                             .ID +
-                        '&user_id=' + this.$store.state.currentUserId_ID
+                        '&user_id=' + this.$store.state.currentUserId
                     )
                         .then((response) => {
                             if (response.data == 0) {
@@ -700,7 +700,7 @@
                     this.likeUsers.push({
                         headImg: require('../image/a.jpg'),
                         //
-                        ID: this.$store.state.currentUserId_ID,
+                        ID: this.$store.state.currentUserId,
                         Username: this.$store.state.currentUsername,
                         Bio: this.$store.state.currentUserBio,
 
@@ -724,7 +724,7 @@
                     center: true
                 }).then(() => {
                     this.axios.post('http://localhost:6001/api/Moment/ForwardMoment', {
-                        User_ID: this.$store.state.currentUserId_ID,
+                        User_ID: this.$store.state.currentUserId,
                         Moment_ID: this.moment.ID
                     })
                         .then((response) => {
@@ -753,7 +753,7 @@
             },
             likeFollowHandler: function (user, FollowState) {
 
-                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId +
                     '&followedID=' + user.ID)
                     .then((response) => {
                         if (response.data == 0) {
@@ -762,7 +762,7 @@
                             //     type: 'success'
                             // });
                             console.log(user)
-                            console.log(this.$store.state.currentUserId_ID)
+                            console.log(this.$store.state.currentUserId)
                             console.log(user.FollowState);
                             //////////////
                             if (!user.FollowState) {
@@ -781,7 +781,7 @@
             },
             followHandler: function (user, FollowState) {
                 console.log(user)
-                console.log(this.$store.state.currentUserId_ID)
+                console.log(this.$store.state.currentUserId)
                 console.log(user.FollowState);
                 //////////////
                 if (!user.FollowState) {
@@ -792,7 +792,7 @@
                 user.FollowState = !user.FollowState;
                 console.log(user.FollowState);
 
-                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId +
                     '&followedID=' + user.SenderID)
                     .then((response) => {
                         if (response.data == 0) {
@@ -839,7 +839,7 @@
                 if (this.blogComment.comment) {
                     this.comments.unshift({
                         headImg: 'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state
-                                .currentUserId_ID +
+                                .currentUserId +
                             '&type=2',
                         Username: this.$store.state.currentUsername,
                         userPage: '',
@@ -853,7 +853,7 @@
 
                     var formdata = new FormData();
                     formdata.append('Mid', this.$route.params.id);
-                    formdata.append('Sender_id', this.$store.state.currentUserId_ID);
+                    formdata.append('Sender_id', this.$store.state.currentUserId);
                     // console.log(this.commentComment.comment)
                     formdata.append('Content', this.blogComment.comment);
                     formdata.append('Send_time', '');
@@ -887,7 +887,7 @@
                 if (this.commentComment.comment) {
                     this.comments.unshift({
                         headImg: 'http://localhost:6001/api/Picture/FirstGet?id=' + this.$store.state
-                                .currentUserId_ID +
+                                .currentUserId +
                             '&type=2',
                         Username: this.$store.state.currentUsername,
                         userPage: '',
@@ -904,7 +904,7 @@
                     this.commentAComment(comment);
                     var formdata = new FormData();
                     formdata.append('Mid', this.$route.params.id);
-                    formdata.append('Sender_id', this.$store.state.currentUserId_ID);
+                    formdata.append('Sender_id', this.$store.state.currentUserId);
                     formdata.append('Content', this.commentComment.comment);
                     formdata.append('Send_time', '');
                     console.log(comment.ID)
@@ -960,7 +960,7 @@
                 .catch((error) => {
                     console.log(error);
                 });
-            this.axios.get('http://localhost:6001/api/moment/detail?userId=' + this.$store.state.currentUserId_ID +
+            this.axios.get('http://localhost:6001/api/moment/detail?userId=' + this.$store.state.currentUserId +
                 '&momentId=' + this.$route.params.id)
                 .then((response) => {
                     this.moment = response.data.t;

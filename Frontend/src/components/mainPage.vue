@@ -49,7 +49,7 @@
     <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
       <el-row>
         <el-col :span="3" :offset="0">
-          <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'+'&Rand=' + Math.random()"
+          <img :src="'http://localhost:6001/api/Picture/FirstGet?id=' +this.$store.state.currentUserId +'&type=2'+'&Rand=' + Math.random()"
             alt="headImg" style="width:80px;height:80px;border-radius:80px;">
         </el-col>
         <el-col :span="18" :offset="0">
@@ -269,7 +269,7 @@
         if (key == 'user') {
           key = 'user/' + this.$store.state.currentUserId;
         } else if (key == 'personalpage') {
-          key = 'personalpage/' + this.$store.state.currentUserId_ID;
+          key = 'personalpage/' + this.$store.state.currentUserId;
         }
         this.$router.push('/main/' + key);
 
@@ -299,7 +299,7 @@
 
         this.axios.post('http://localhost:6001/api/Moment/InsertMoment', {
             ID: this.currentMomentID,
-            SenderID: this.$store.state.currentUserId_ID,
+            SenderID: this.$store.state.currentUserId,
             Content: this.sendText,
             LikeNum: 0,
             ForwardNum: 0,
@@ -476,9 +476,9 @@
       var that = this;
       var start = () => {
         var wsImpl = window.WebSocket || window.MozWebSocket;
-        console.log('websocket', that.$store.state.currentUserId_ID)
+        console.log('websocket', that.$store.state.currentUserId)
 
-        window.ws = new wsImpl('ws://192.168.43.140:8181/' + that.$store.state.currentUserId_ID)
+        window.ws = new wsImpl('ws://192.168.43.140:8181/' + that.$store.state.currentUserId)
 
         ws.onmessage = function (evt) {
           console.log('..我收到了')
