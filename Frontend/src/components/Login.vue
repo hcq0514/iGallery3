@@ -109,10 +109,10 @@
                                 this.$message.error(response.message);
                             } else {
                                 //写入全局变量
-                                this.$store.commit('addCurrentUserId', response.data.id);
-                                this.$store.commit('addCurrentUsername', response.data.username);
-                                this.$store.commit('addCurrentUserBio', response.data.bio);
-                                this.$store.commit('addCurrentUserPhoto', response.data.photoUrl);
+                                this.$store.commit('setCurrentUserId', response.data.id);
+                                this.$store.commit('setCurrentUsername', response.data.username);
+                                this.$store.commit('setCurrentUserBio', response.data.bio);
+                                this.$store.commit('setCurrentUserPhoto', response.data.photoUrl);
                                 this.$router.push('/main/user/'+response.data.id);
                             }
                         })

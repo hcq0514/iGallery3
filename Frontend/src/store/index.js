@@ -14,16 +14,16 @@ export default new Vuex.Store({
         currentUserPhoto: '',
     },
     mutations: {
-        addCurrentUserId(state, currentId) {
+        setCurrentUserId(state, currentId) {
             state.currentUserId = currentId;
         },
-        addCurrentUsername(state, username) {
+        setCurrentUsername(state, username) {
             state.currentUsername = username;
         },
-        addCurrentUserPhoto(state, photo) {
+        setCurrentUserPhoto(state, photo) {
             state.currentUserPhoto = photo;
         },
-        addCurrentUserBio(state, bio) {
+        setCurrentUserBio(state, bio) {
             state.currentUserBio = bio;
         },
     }

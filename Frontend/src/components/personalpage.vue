@@ -41,7 +41,9 @@
                                 <el-button style="font-size:26px" type="text" id="username">{{username}}</el-button>
                             </el-row>
                             <el-row>
-                                <el-button type="text" class="num" @click="showFollow">关注: {{followNum}}</el-button>
+                                <el-button v-if="$route.params.id==$store.state.currentUserId" type="text" class="num"
+                                           @click="showFollow">关注: {{followNum}}
+                                </el-button>
                                 <el-dialog title="" :visible.sync="followListVisible" width="40%">
                                     <span slot="title" style="color:#555;font-size:20px;letter-spacing:5px;">关注</span>
                                     <div style="height:400px;overflow:hidden;overflow-y:auto;">
@@ -71,7 +73,9 @@
                                         </div>
                                     </div>
                                 </el-dialog>
-                                <el-button type="text" class="num" @click="showFans">粉丝: {{fansNum}}</el-button>
+                                <el-button v-if="$route.params.id==$store.state.currentUserId" type="text" class="num"
+                                           @click="showFans">粉丝: {{fansNum}}
+                                </el-button>
                                 <el-dialog title="" :visible.sync="fanListVisible" width="40%">
                                     <span slot="title" style="color:#555;font-size:20px;letter-spacing:5px;">粉丝</span>
                                     <div style="height:400px;overflow:hidden;overflow-y:auto;">
@@ -106,13 +110,13 @@
                             </el-row>
                         </el-col>
                         <el-col :span="4" style="height:100%">
-                            <el-row type="flex" align="middle" justify="center" style="height:100%;margin-top:25%">
+                            <el-row  align="middle" justify="center" style="height:100%;margin-top:25%">
                                 <el-button v-if="$route.params.id!=$store.state.currentUserId" icon="el-icon-message"
                                            style="width:50px;height:50px" @click="messageClickHandler"
                                            plain type="primary" circle></el-button>
                                 <el-button v-if="$route.params.id!=$store.state.currentUserId" icon="el-icon-view"
                                            style="margin-left:15px;width:50px;height:50px;"
-                                           :class="{background_white: !FollowState}" @click="followClickHandler" plain
+                                           :class="{background_blue: !FollowState}" @click="followClickHandler" plain
                                            type="primary" circle></el-button>
                             </el-row>
                         </el-col>
@@ -121,7 +125,7 @@
                 <el-row style="padding:0 10px">
                     <el-menu default-active="dynamic" class="el-menu-demo" mode="horizontal" @select="handleSelectTop"
                              active-text-color="#409eff">
-                        <el-menu-item index="dynamic">我的动态
+                        <el-menu-item index="dynamic">用户动态
                             <span style="font-size:12px;color:#000009"
                                   v-if="moments!=undefined">{{moments.length}}</span>
                         </el-menu-item>
@@ -164,7 +168,9 @@
                                         </el-form-item>
                                     </el-form>
                                     <div slot="footer" class="dialog-footer">
-                                        <el-button type="primary" @click="addCollection(ruleform.fname)" size="middle">确定</el-button>
+                                        <el-button type="primary" @click="addCollection(ruleform.fname)" size="middle">
+                                            确定
+                                        </el-button>
                                         <el-button @click="dialogFormVisible=false;ruleform.fname=''" size="middle">取消
                                         </el-button>
                                     </div>
@@ -270,7 +276,6 @@
                                 </div>
                             </el-dialog>
                         </el-col>
-
                     </el-col>
                 </el-row>
             </el-card>
@@ -281,6 +286,9 @@
 <style scoped>
     .background_white {
         background-color: rgba(255, 255, 255, 1)
+    }
+    .background_blue {
+        background-color: #409EFF
     }
 
     /* 可以设置不同的进入和离开动画 */
@@ -500,6 +508,7 @@
     import * as userApi from '../api/user/user'
     import * as momentApi from '../api/moment/moment'
     import * as collectApi from '../api/collect/collect'
+    import * as baseApi from '../api/base/base'
     import Vue from 'vue'
 
     export default {
@@ -624,15 +633,16 @@
                 window.ws.send('/' + path + ' ' + state);
             },
             followClickHandler() {
-                this.axios.get('http://localhost:6001/api/Users/Follow?followID=' + this.$store.state.currentUserId +
-                    '&followedID=' + this.$route.params.id)
+                baseApi.addFollow(this.$store.state.currentUserId, this.$route.params.id)
                     .then((response) => {
-                        if (response.data == 0) {
+                        if (response.success) {
                             if (!this.FollowState) {
                                 this.fansNum++;
-                                this.messageWebsocketHandler(this.$route.params.id, 0)
+                                this.$message.info('关注成功');
+                                // this.messageWebsocketHandler(this.$route.params.id, 0)
                             } else {
                                 this.fansNum--;
+                                this.$message.info('取消关注成功');
                             }
                             this.FollowState = !this.FollowState;
                         } else {
@@ -807,7 +817,7 @@
             deleteFavor: function (index) {
                 collectApi.deleteCollectionByCollectionId(index)
                     .then((response) => {
-                        if (response.data.success == true) {
+                        if (response.success) {
                             this.$message({
                                 message: '删除成功！',
                                 type: 'success'
@@ -853,19 +863,19 @@
                 this.axios.get('http://localhost:6001/api/collect/addCollection?collectionName=' + this.ruleform.fname +
                     '&userId=' + this.$store.state.currentUserId
                 ).then((response) => {
-                        if (!response.success) {
-                            this.$message({
-                                message: '新建成功！',
-                                type: 'success'
-                            });
-                            this.initPageUserCollections(this.$route.params.id);
-                        } else {
-                            this.$message({
-                                message: '新建收藏夹失败，请重试！',
-                                type: 'warning'
-                            });
-                        }
-                    })
+                    if (!response.success) {
+                        this.$message({
+                            message: '新建成功！',
+                            type: 'success'
+                        });
+                        this.initPageUserCollections(this.$route.params.id);
+                    } else {
+                        this.$message({
+                            message: '新建收藏夹失败，请重试！',
+                            type: 'warning'
+                        });
+                    }
+                })
 
             },
             //重命名收藏夹
@@ -885,12 +895,11 @@
                     })
             },
             showFollow() {
+                this.initPageUserFollowList(this.$route.params.id);
                 this.followListVisible = true
             },
             showFans() {
-                // this.$router.push('fans/', {
-                //   userID: this.userID
-                // });
+                this.initPageUserFansList(this.$route.params.id);
                 this.fanListVisible = true
 
             },
@@ -952,21 +961,26 @@
                     .then((response) => {
                         this.favors = response.data;
                     });
+            },
+            initPageUserFollowStatus(userId, targetUserId) {
+                baseApi.existFollow(userId, targetUserId)
+                    .then((response) => {
+                        if (response.data) {
+                            this.FollowState = true;
+                        } else {
+                            this.FollowState = false;
+                        }
+                    });
             }
         },
         created() {
-            this.axios.get('http://localhost:6001/api/user/FollowState?from_id=' + this.$store.state.currentUserId +
-                '&to_id=' + this.$route.params.id)
-                .then((response) => {
-                    if (response.data == 0) {
-                        this.FollowState = true;
-                    } else {
-                        this.FollowState = false;
-                    }
-                });
+            //判断是否是当前用户
+            if (this.$store.state.currentUserId != this.$route.params.id) {
+                this.initPageUserFollowStatus(this.$store.state.currentUserId, this.$route.params.id);
+            }
             this.initPageUser(this.$route.params.id);
             this.initPageUserMoments(this.$route.params.id);
-            this.initPageUserFollowList(this.$route.params.id);
+            // this.initPageUserFollowList(this.$route.params.id);
             this.initPageUserFansList(this.$route.params.id);
             this.initPageUserCollections(this.$route.params.id);
 
@@ -993,173 +1007,6 @@
         beforeRouteUpdate(to, from, next) {
             this.followListVisible = false;
             this.fanListVisible = false;
-            this.axios.get('http://localhost:6001/api/user/FollowState?from_id=' + this.$store.state.currentUserId +
-                '&to_id=' + to.params.id)
-                .then((response) => {
-                    if (response.data = 0) {
-                        this.FollowState = true;
-                    } else {
-                        this.FollowState = false;
-                    }
-                });
-            this.axios.get('http://localhost:6001/api/user/GetUserInfobyID?id=' + to.params.id)
-                .then((response) => {
-                    this.username = response.data.Username;
-                    this.desc = response.data.Bio;
-                });
-            this.axios.get('http://192.168.43.249:54468/api/HomePage/GetMyMoments?Sender_id=' + to.params.id)
-                .then((response) => {
-                    this.moments = response.data;
-                    (this.moments).forEach(element => {
-                        // element.ID = response.data.ID[index]
-                        // index++;
-                        element.momentID = element.ID
-                        this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
-                            .then((response) => {
-                                var url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data[0];
-                                Vue.set(element, 'url', url);
-                            })
-                    })
-                });
-            this.followUsers = [];
-            this.followNum = this.followUsers.length;
-
-            this.axios.get('http://localhost:6001/api/user/FollowList?userID=' + to.params.id)
-                .then((response) => {
-                    if (response.data == 'Not found') {
-                        this.followUsers = [];
-                    } else {
-                        this.followUsers = response.data;
-                    }
-                    // this.followUsers = response.data;
-                    this.followNum = this.followUsers.length
-                    this.followUsers.forEach(element => {
-                        element.headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
-                            element.ID +
-                            '&type=2';
-                        // 等待修改
-                        element.FollowState = true;
-                        // element.followState = '已关注'
-                        Vue.set(element, 'followState', '已关注')
-                        // if (element.FollowState == 'true') {
-                        //   element.FollowState = true
-                        //   element.followState = '已关注'
-                        // } else {
-                        //   element.FollowState = false
-                        //   element.followState = '关注'
-                        // }
-                    });
-                })
-
-            this.fanUsers = [];
-            this.fansNum = this.fanUsers.length;
-            this.axios.get('http://localhost:6001/api/user/FanList?user_id=' + to.params.id)
-                .then((response) => {
-                    if (response.data == 'Not found') {
-                        this.fanUsers = [];
-                    } else {
-                        this.fanUsers = response.data;
-                    }
-
-                    this.fansNum = this.fanUsers.length;
-                    this.fanUsers.forEach(element => {
-                        var headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
-                            element.ID +
-                            '&type=2';
-                        Vue.set(element, 'headImg', headImg)
-                        // 等待修改
-                        // element.FollowState = 'true';
-                        if (element.FollowState == 'True') {
-                            element.FollowState = true
-                            element.followState = '已关注'
-                        } else {
-                            element.FollowState = false
-                            element.followState = '关注'
-                        }
-                    });
-                })
-            this.favors = []
-            this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnUserCollections?user_id=' + this.$store.state.currentUserId)
-                .then((response) => {
-                    // this.favors.collectionName = response.data.NAME;
-                    let totalFavorName = response.data;
-                    var index = 0;
-
-
-                    this.favors = []
-
-                    // if (totalFavorName.length < 1) {
-                    //   this.favors = []
-                    // }
-
-                    totalFavorName.forEach((element) => {
-                        var temp = {}
-                        temp.collectionName = element.Name;
-
-                        this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' +
-                            this
-                                .$store.state.currentUserId + '&name=' + element.Name)
-                            .then((response) => {
-                                temp.collectNum = response.data
-                            })
-                        this.favors.push(temp);
-                        // index++;
-                    })
-
-                    this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this
-                            .$store
-                            .state.currentUserId +
-                        '&name=' + '默认收藏夹')
-                        .then((response) => {
-                            this.defaultCollectNum = response.data
-                        })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-
-            this.headUrl = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
-                to.params.id +
-                '&type=2';
-            // Vue.set(this, 'headUrl', headUrl)
-
-            ///////请求个人信息
-            // this.username = this.$store.state.currentUsername;
-            // this.desc = this.$store.state.currentUserBio;
-
-
-            this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnCollectionContentID?FounderID=' + this.$store.state
-                    .currentUserId +
-                '&Name=' + '默认收藏夹')
-                .then((response) => {
-                    var momentIDList = response.data;
-                    var index = 0;
-
-
-                    this.collects = []
-                    // if (momentIDList < 1) {
-                    //   this.collects = []
-                    // }
-
-                    momentIDList.forEach(element => {
-                        var temp = {}
-                        // this.collects[index].momentID = element;
-                        temp.momentID = element;
-                        this.axios.get('http://192.168.43.249:54468/api/Collection/GetFirstPicIDbyMomentID?moment_id=' +
-                            element)
-                            .then((response) => {
-                                //////////////////////////////
-                                // this.collects[index].url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data;
-                                var url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data;
-                                // Vue.set(this.collects[index], 'url', url)
-                                Vue.set(temp, 'url', url)
-                                this.collects.push(temp)
-                                next()
-                            })
-                    });
-                    // index++;
-                })
-
-        },
+        }
     }
 </script>
