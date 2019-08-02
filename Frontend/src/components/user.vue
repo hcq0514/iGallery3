@@ -35,7 +35,8 @@
                     </el-row>
                     <!-- <div class="inset-shadow"> -->
                     <el-row style="overflow-y:auto;overflow-x:hidden;height:340px;width:260px;margin-bottom:12px;">
-                        <el-row v-if="followUsers!=undefined && followUsers.length>0" :key="index" v-for="(followUser,index) in followUsers"
+                        <el-row v-if="followUsers!=undefined && followUsers.length>0" :key="index"
+                                v-for="(followUser,index) in followUsers"
                                 type="flex" align="middle" style="margin-bottom:12px">
                             <el-col>
                                 <div class="user-img border">
@@ -80,17 +81,17 @@
                                 <el-col :span="2">
                                     <div class="small-user-img small-border">
                                         <img class="small-user-img small-img-border hover-cursor"
-                                             :src="moment.Photo+'&Rand=' + Math.random()" alt="头像"
+                                             :src="moment.userPhotoUrl+'&Rand=' + Math.random()" alt="头像"
                                              @click="jumpToUser(moment.moment.SenderID)"/>
                                     </div>
                                 </el-col>
                                 <el-col :span="6">
                                     <el-row>
                                         <span style="font-size:16px; font-weight:bold hover-cursor"
-                                              @click="jumpToUser(moment.moment.SenderID)" class="hover-cursor">{{moment.user_username}}</span>
+                                              @click="jumpToUser(moment.moment.SenderID)" class="hover-cursor">{{moment.userName}}</span>
                                     </el-row>
                                     <el-row>
-                                        <span style="font-size:14px; color:#999999">{{moment.user_bio}}</span>
+                                        <span style="font-size:14px; color:#999999">{{moment.userBio}}</span>
                                     </el-row>
                                 </el-col>
                             </el-row>
@@ -98,16 +99,17 @@
                         <el-row style="font-size:13px;color:#555;margin-left:15px" v-if="moment.forwarded_id!=null">
               <span>
                 <img src="../image/forwarded-icon.png" alt="forwarded-icon"> 转发自
-                <span @click="jumpToUser(moment.forwarded_id)" style="color:#6191d5;display:inline-block;margin:5px 0"
+                <span @click="jumpToUser(moment.forwardFromUserId)"
+                      style="color:#6191d5;display:inline-block;margin:5px 0"
                       class="hover-cursor">
-                  @{{moment.forwarded_username}}</span>
+                  @{{moment.forwardFromUserName}}</span>
               </span>
                         </el-row>
                         <el-row>
-                            <el-carousel :height="autoHeight(moment.moment.ID)" :interval="0"
+                            <el-carousel height="600px" :interval="0"
                                          indicator-position="outside" :arrow="showArrow(moment)">
-                                <el-carousel-item v-for="(img,index) in moment.moment.imgList" :key="index">
-                                    <div class="pic">
+                                <el-carousel-item v-for="(img,index) in moment.momentImgList" :key="index">
+                                    <div class="pic" >
                                         <img :src="img" alt="movementImg">
                                     </div>
                                 </el-carousel-item>
@@ -128,7 +130,7 @@
                         <el-col style="padding:5px 15px">
                             <!-- 简介 -->
                             <el-row style="font-size:14px">
-                                {{moment.moment.Content}}
+                                {{moment.momentContent}}
                             </el-row>
                             <!-- tag -->
                             <el-row>
@@ -139,13 +141,13 @@
 
                             <el-row v-for="(comment,index) in moment.comments" :key="index" style="font-size:13px;">
                                 <span style="display:inline-block;margin:2px 0;color:#000;font-weight:600"
-                                      class="hover-cursor" @click="jumpToUser(comment.sender.ID)">{{comment.sender_username}}</span>
+                                      class="hover-cursor" @click="jumpToUser(comment.commentUserId)">{{comment.commentUserName}}</span>
                                 <span>{{comment.content}}</span>
                             </el-row>
                             <span v-if="moment.more_comments" @click="jumpToDetail(moment.moment.ID)"
                                   style="color:#999;font-size:12px;font-weight:500"
                                   class="hover-cursor">加载更多</span>
-                            <el-row class="moment-time">{{moment.moment.Time}}</el-row>
+                            <el-row class="moment-time">{{moment.momentCreateTime}}</el-row>
                             <div style="border-top:1px solid rgb(235,238,245)"></div>
                             <el-row type="flex" justify="space-between" style="margin:10px 0">
                                 <input placeholder="添加评论..." v-model="moment.newComment"
@@ -377,6 +379,8 @@
 </style>
 
 <script>
+    import * as userApi from '../api/user/user'
+    import * as momentApi from '../api/moment/moment'
     import Vue from 'vue'
 
     //文档高度
@@ -489,7 +493,6 @@
     export default {
         data() {
             return {
-
                 carouselHeight: [],
                 loadingPage: true,
                 dic: new Dictionary(),
@@ -504,107 +507,37 @@
                     FollowState: true,
                     followState: '已关注'
                 }],
-
                 totalMoments: [{
-                    //请求的数据
-                    user_email: '',
-                    user_username: 'leonnnop',
-                    user_bio: 'leonnnop',
-                    forwarded_id: 'dzq@qq.com',
-                    forwarded_username: 'dzq',
-                    moment: {
-                        ID: '1',
-                        Content: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
-                        Time: '2018/7/20 8:37:18',
-                        QuoteMID: '',
-                        imgList: ['']
-                    },
+                    //动态所属用户资料
+                    userId: '',
+                    userName: 'leonnnop',
+                    userBio: 'leonnnop',
+                    userPhotoUrl: '',
+                    //关注等资料
+                    forwardFromUserId: 'dzq@qq.com',
+                    forwardFromUserName: 'dzq',
+                    //动态内容
+                    momentId: '1',
+                    momentContent: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
+                    momentCreateTime: '2018/7/20 8:37:18',
+                    momentImgList: [''],
                     tags: [
                         'tag1', 'tag2'
                     ],
                     liked: false,
                     collected: false,
+                    //评论内容
                     comments: [{
-                        sender_email: '',
-                        sender_username: 'user1',
+                        userId: '',
+                        userName: 'user1',
                         content: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。'
-                    }, {
-                        sender_email: '',
-                        sender_username: 'user1',
-                        content: 'comment1'
-                    }, {
-                        sender_email: '',
-                        sender_username: 'user1',
-                        content: 'comment1'
-                    }, {
-                        sender_email: '',
-                        sender_username: 'user1',
-                        content: 'comment1'
                     }],
                     more_comments: true,
-                    Photo: require('../image/a.jpg'),
                     //增加的属性
                     likeImg: require('../image/comment-unlike.png'),
                     collectImg: require('../image/uncollect.png'),
                     newComment: '',
-                },
-                    {
-                        //请求的数据
-                        user_email: '',
-                        user_username: 'leonnnop',
-                        user_bio: 'leonnnop',
-                        forwarded_id: '',
-                        forwarded_username: '',
-                        moment: {
-                            ID: '2',
-                            Content: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
-                            Time: '2018/7/20 8:37:18',
-                            QuoteMID: '',
-                            imgList: ['']
-                        },
-                        tags: [
-                            'tag1'
-                        ],
-                        liked: false,
-                        collected: false,
-                        comments: [{
-                            sender_email: '',
-                            sender_username: 'user1',
-                            content: 'comment1'
-                        }],
-                        more_comments: false,
-                        Photo: require('../image/a.jpg'),
-                        //增加的属性
-                        likeImg: require('../image/comment-unlike.png'),
-                        collectImg: require('../image/uncollect.png'),
-                        newComment: '',
-                    },
-                    {
-                        //请求的数据
-                        user_email: '',
-                        user_username: 'leonnnop',
-                        user_bio: 'leonnnop',
-                        forwarded_id: '',
-                        forwarded_username: '',
-                        moment: {
-                            ID: '3',
-                            Content: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
-                            Time: '2018/7/20 8:37:18',
-                            QuoteMID: '',
-                            imgList: ['']
-                        },
-                        tags: [],
-                        liked: false,
-                        collected: false,
-                        comments: [],
-                        more_comments: false,
-                        Photo: require('../image/a.jpg'),
-                        //增加的属性
-                        likeImg: require('../image/comment-unlike.png'),
-                        collectImg: require('../image/uncollect.png'),
-                        newComment: '',
-                    }
-                ],
+                }],
                 usermoreDialogVisible: false,
                 usermoreMomentId: '',
                 askNum: 0 //再次请求动态的次数
@@ -617,37 +550,28 @@
         beforeCreate() {
         },
         created() {
-            //初始化用户关注用户
-            this.axios.get('http://localhost:6001/api/user/getFollowListByUserId?userId=' + this.$route.params.id)
+            //初始化用户关注用户、
+            userApi.getFollowListByUserId(this.$route.params.id)
                 .then((response) => {
-                    this.followUsers = response.data.t;
+                    this.followUsers = response.data;
                 });
             this.dic = new Dictionary();
             this.bodyWidth = window.screen.width;
             var self = this;
             setTimeout(function () {
                 self.loadingPage = false;
-            }, 1000)
+            }, 1000);
             // }
             //监听滚动条，到底时请求动态...
-            this.axios.all([this.axios.get('http://192.168.43.249:54468/api/DisplayMoments/followUsers', {
-                params: {
-                    Email: this.$store.state.currentUserId,
-                    Page: 1,
-                }
-            }),
-                this.axios.get('http://localhost:6001/api/user/FollowList?userID=' + this.$store.state.currentUserId)
-            ])
-                .then(this.axios.spread((res1, res2) => {
-                    this.totalMoments = res1.data;
-
+            momentApi.getfollowUserMoments(this.$route.params.id)
+                .then((response) => {
+                    this.totalMoments = response.data;
                     if (this.totalMoments.length < 1) {
                         this.bottomHint = '没有东西可以看哦，多去关注点人啦！(๑•̀ㅂ•́) ✧'
                     }
-
                     this.totalMoments.forEach(element => {
                         //点赞状态
-                        if (element.liked == 0) {
+                        if (!element.liked) {
                             var likeImg = require('../image/comment-like.png');
                             Vue.set(element, 'likeImg', likeImg)
                         } else {
@@ -655,43 +579,21 @@
                             Vue.set(element, 'likeImg', unlikeImg)
                         }
                         //收藏状态
-                        if (element.collected == 0) {
+                        if (!element.collected) {
                             var collectImg = require('../image/collect.png');
                             Vue.set(element, 'collectImg', collectImg)
 
                         } else {
                             var uncollectImg = require('../image/uncollect.png');
                             Vue.set(element, 'collectImg', uncollectImg)
-
                         }
 
-                        //请求图片
-                        this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
-                            .then((response) => {
-                                let list = response.data;
-                                //将id数组变为url数组
-                                // element.moment.imgList = [];
-                                var imgList = []
-                                list.forEach(ele => {
-                                    // element.moment.imgList.push({
-                                    imgList.push('http://192.168.43.249:54468/api/Picture/Gets?pid=' +
-                                        ele
-                                    )
-                                    // ele = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + ele;
-                                });
-                                Vue.set(element.moment, 'imgList', imgList);
-                                this.loadingPage = false;
-                                console.log(this.loadingPage)
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
                         element.newComment = '';
 
-                        var Photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
-                            '&type=2';
-                        Vue.set(element, 'Photo', Photo)
-                        console.log(this.totalMoments)
+                        // var Photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
+                        //     '&type=2';
+                        // Vue.set(element, 'Photo', Photo)
+                        // console.log(this.totalMoments)
 
                         if (res2.data != 'Not found') {
                             res2.data.forEach(element => {
@@ -715,15 +617,13 @@
 
                                     this.dic.set(element.moment.ID, height + 'px');
                                 }
-                                // console.log(this.dic.getItems())
-
                             })
                             .catch((error) => {
                                 console.log(error);
                             });
 
                     });
-                }))
+                })
         },
         methods: {
             autoHeight(ID) {
@@ -741,7 +641,7 @@
                 }
             },
             showArrow: function (moment) {
-                if (moment.moment.imgList.length > 1) {
+                if (moment.momentImgList!=undefined && moment.momentImgList.length > 1) {
                     return 'hover';
                 } else {
                     return 'never';
@@ -884,8 +784,8 @@
                                 moment.newComment = '';
                             } else {
                                 moment.comments.push({
-                                    sender_email: '',
-                                    sender_username: 'Leonnnop',
+                                    commentUserId: '',
+                                    commentUserName: 'Leonnnop',
                                     content: moment.newComment,
                                     send_time: '2018/7/20 8:37:18'
                                 });
@@ -1017,8 +917,13 @@
                 console.log('backgroundHandler');
                 // setTimeout('this.loadingPage = false', 1000);
                 this.loadingPage = false
-            }
-
+            },
+            initPageUserFollowList(id) {
+                userApi.getFollowListByUserId(id)
+                    .then((response) => {
+                        this.followUsers = response.data;
+                    });
+            },
         },
         beforeRouteLeave(to, from, next) {
             this.totalMoments = [];
