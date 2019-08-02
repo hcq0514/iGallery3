@@ -141,17 +141,17 @@
 
                             <el-row v-for="(comment,index) in moment.comments" :key="index" style="font-size:13px;">
                                 <span style="display:inline-block;margin:2px 0;color:#000;font-weight:600"
-                                      class="hover-cursor" @click="jumpToUser(comment.commentUserId)">{{comment.commentUserName}}</span>
+                                      class="hover-cursor" @click="jumpToUser(comment.userId)">{{comment.userName}}：</span>
                                 <span>{{comment.content}}</span>
                             </el-row>
-                            <span v-if="moment.more_comments" @click="jumpToDetail(moment.moment.ID)"
+                            <span v-if="moment.more_comments" @click="jumpToDetail(moment.momentId)"
                                   style="color:#999;font-size:12px;font-weight:500"
                                   class="hover-cursor">加载更多</span>
                             <el-row class="moment-time">{{moment.momentCreateTime}}</el-row>
                             <div style="border-top:1px solid rgb(235,238,245)"></div>
                             <el-row type="flex" justify="space-between" style="margin:10px 0">
                                 <input placeholder="添加评论..." v-model="moment.newComment"
-                                       style="border:0;padding:5px;width:100%" @keyup.enter="commentHandler(moment)">
+                                       style="border:0;padding:5px;width:100%" @keyup.enter="addComment(moment)">
                             </el-row>
                         </el-col>
                     </el-row>
@@ -758,34 +758,23 @@
                 this.usermoreDialogVisible = true;
                 this.usermoreMomentId = moment.moment.ID;
             },
-            commentHandler: function (moment) {
-                var formdata = new FormData();
-                formdata.append('Mid', moment.moment.ID);
-                formdata.append('Sender_id', this.$store.state.currentUserId);
-                formdata.append('Content', moment.newComment);
-                formdata.append('Send_time', '');
-                formdata.append('Quote_comment_id', '');
-                let config = {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                };
-                this.axios.post('http://192.168.43.249:54468/api/Coment/SvCmt', formdata, config)
+            addComment: function (moment) {
+                momentApi.addComment(this.$store.state.currentUserId,moment.momentId,moment.newComment)
                     .then((response) => {
                         // if (response.data == 'OK') {
-                        if (true) {
+                        if (response.success) {
                             this.$message({
                                 message: '评论成功！',
                                 type: 'success'
                             });
-                            this.messageWebsocketHandler(moment.moment.SenderID, 2, ' ' + moment.newComment)
-                            if (moment.comments.length == 4) {
+                            // this.messageWebsocketHandler(moment.momentId, 2, ' ' + moment.newComment)
+                            if (moment.comments!=undefined &&moment.comments.length == 4) {
                                 moment.more_comments = true;
                                 moment.newComment = '';
                             } else {
                                 moment.comments.push({
-                                    commentUserId: '',
-                                    commentUserName: 'Leonnnop',
+                                    userId: '',
+                                    userName: this.$store.state.currentUsername,
                                     content: moment.newComment,
                                     send_time: '2018/7/20 8:37:18'
                                 });
@@ -794,10 +783,6 @@
                         } else {
                             this.$message.error('评论失败，请稍后重试！');
                         }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        this.$message.error('评论失败，请稍后重试！');
                     })
             },
             jumpToDetail: function (momentId) {
