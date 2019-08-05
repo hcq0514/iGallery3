@@ -82,13 +82,13 @@
                                     <div class="small-user-img small-border">
                                         <img class="small-user-img small-img-border hover-cursor"
                                              :src="moment.userPhotoUrl+'&Rand=' + Math.random()" alt="头像"
-                                             @click="jumpToUser(moment.moment.SenderID)"/>
+                                             @click="jumpToUser(moment.userId)"/>
                                     </div>
                                 </el-col>
                                 <el-col :span="6">
                                     <el-row>
                                         <span style="font-size:16px; font-weight:bold hover-cursor"
-                                              @click="jumpToUser(moment.moment.SenderID)" class="hover-cursor">{{moment.userName}}</span>
+                                              @click="jumpToUser(moment.userId)" class="hover-cursor">{{moment.userName}}</span>
                                     </el-row>
                                     <el-row>
                                         <span style="font-size:14px; color:#999999">{{moment.userBio}}</span>

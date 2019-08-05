@@ -6,11 +6,11 @@
         <el-row>
             <el-col :span="10" :offset="4">
                 <el-carousel v-if="hackReset" :height="carouselHeight" :interval="0" indicator-position="outside">
-<!--                    <el-carousel-item v-for="(img,index) in imgList" :key="index">-->
+                    <el-carousel-item v-for="(img,index) in moment.imgListUrl" :key="index">
                         <div class="pic">
-                            <img :src="moment.photoUrl+'&Rand=' + Math.random()" alt="movementImg">
+                            <img :src="img+'&Rand=' + Math.random()" alt="movementImg">
                         </div>
-<!--                    </el-carousel-item>-->
+                    </el-carousel-item>
                 </el-carousel>
                 <!-- 操作 -->
                 <el-row>
@@ -19,7 +19,7 @@
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
                                     <img :src="likeSrc" alt="like" class="op-img hover-cursor" @click="likeHandler">
-                                    <span @click="likeListHandler" class="hover-cursor">{{moment.LikeNum}}</span>
+                                    <span @click="likeListHandler" class="hover-cursor">{{moment.likeNum}}</span>
                                     <el-dialog title="" :visible.sync="likeListVisible" width="40%">
                                         <span slot="title"
                                               style="color:#555;font-size:20px;letter-spacing:5px;">点赞</span>
@@ -57,18 +57,18 @@
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
                                     <img src="../image/forward.png" alt="forward" class="op-img hover-cursor"
-                                         @click="forwardHandler()">{{moment.ForwardNum}}
+                                         @click="forwardHandler()">{{moment.forwardNum}}
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img src="../image/comment.png" alt="comment" class="op-img hover-cursor">{{moment.CommentNum}}
+                                    <img src="../image/comment.png" alt="comment" class="op-img hover-cursor">{{moment.commentNum}}
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
                                     <img :src="collectSrc" alt="collect" class="op-img hover-cursor"
-                                         @click="collectHandler">{{moment.CollectNum}}
+                                         @click="collectHandler">{{moment.collectNum}}
                                 </el-row>
                             </el-col>
                         </el-row>
@@ -376,15 +376,15 @@
                     content: '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...',
-                    photoUrl:'',
+                    imgListUrl:[],
                     tags: [
                         'tag1', 'tag2', 'tag3'
                     ],
-                    CollectNum: 10,
-                    ForwardNum: 0,
-                    CommentNum: 3,
-                    LikeNum: 8,
-                    LikeState: false,
+                    collectNum: 10,
+                    forwardNum: 0,
+                    commentNum: 3,
+                    likeNum: 8,
+                    likeState: false,
                     collectState: false,
                 },
                 comments: [{
@@ -650,7 +650,7 @@
                         .then((response) => {
                             if (response.data == 0) {
                                 this.collectSrc = require('../image/collect.png');
-                                this.moment.CollectNum++;
+                                this.moment.collectNum++;
                                 this.moment.collectState = !this.moment.collectState;
 
                             } else {
@@ -668,7 +668,7 @@
                         .then((response) => {
                             if (response.data == 0) {
                                 this.collectSrc = require('../image/uncollect.png');
-                                this.moment.CollectNum--;
+                                this.moment.collectNum--;
                                 this.moment.collectState = !this.moment.collectState;
 
                             } else {
@@ -679,7 +679,7 @@
                             console.log(error);
                         });
                     // this.collectSrc = require('../image/uncollect.png');
-                    // this.moment.CollectNum--;
+                    // this.moment.collectNum--;
                 }
 
             },
@@ -691,10 +691,10 @@
                 )
 
                 console.log(this.moment.LikeState)
-                if (!this.moment.LikeState) {
+                if (!this.moment.likeState) {
                     this.likeSrc = require('../image/comment-like.png');
                     this.messageWebsocketHandler(this.moment.SenderID, 1)
-                    this.moment.LikeNum++;
+                    this.moment.likeNum++;
                     //加入喜欢列表
                     this.likeUsers.push({
                         headImg: require('../image/a.jpg'),
@@ -708,7 +708,7 @@
                     this.likeSrc = require('../image/comment-unlike.png');
                     //从喜欢列表删除
                     this.likeUsers.pop();
-                    this.moment.LikeNum--;
+                    this.moment.likeNum--;
                 }
                 this.moment.LikeState = !this.moment.LikeState;
             },
@@ -847,7 +847,7 @@
                         isCommentAComment: false,
                         quoteComment: {}
                     });
-                    this.moment.CommentNum++;
+                    this.moment.commentNum++;
 
 
                     var formdata = new FormData();
@@ -899,7 +899,7 @@
                             content: comment.content
                         }
                     });
-                    this.moment.CommentNum++;
+                    this.moment.commentNum++;
                     this.commentAComment(comment);
                     var formdata = new FormData();
                     formdata.append('Mid', this.$route.params.id);
