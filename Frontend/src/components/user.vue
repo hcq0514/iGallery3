@@ -109,7 +109,7 @@
                             <el-carousel height="600px" :interval="0"
                                          indicator-position="outside" :arrow="showArrow(moment)">
                                 <el-carousel-item v-for="(img,index) in moment.momentImgList" :key="index">
-                                    <div class="pic" >
+                                    <div class="pic">
                                         <img :src="img" alt="movementImg">
                                     </div>
                                 </el-carousel-item>
@@ -141,7 +141,8 @@
 
                             <el-row v-for="(comment,index) in moment.comments" :key="index" style="font-size:13px;">
                                 <span style="display:inline-block;margin:2px 0;color:#000;font-weight:600"
-                                      class="hover-cursor" @click="jumpToUser(comment.userId)">{{comment.userName}}：</span>
+                                      class="hover-cursor"
+                                      @click="jumpToUser(comment.userId)">{{comment.userName}}：</span>
                                 <span>{{comment.content}}</span>
                             </el-row>
                             <span v-if="moment.more_comments" @click="jumpToDetail(moment.momentId)"
@@ -561,9 +562,7 @@
             setTimeout(function () {
                 self.loadingPage = false;
             }, 1000);
-            // }
-            //监听滚动条，到底时请求动态...
-            momentApi.getfollowUserMoments(this.$route.params.id)
+            momentApi.getfollowUserMoments(0)
                 .then((response) => {
                     this.totalMoments = response.data;
                     if (this.totalMoments.length < 1) {
@@ -641,7 +640,7 @@
                 }
             },
             showArrow: function (moment) {
-                if (moment.momentImgList!=undefined && moment.momentImgList.length > 1) {
+                if (moment.momentImgList != undefined && moment.momentImgList.length > 1) {
                     return 'hover';
                 } else {
                     return 'never';
@@ -759,7 +758,7 @@
                 this.usermoreMomentId = moment.moment.ID;
             },
             addComment: function (moment) {
-                momentApi.addComment(this.$store.state.currentUserId,moment.momentId,moment.newComment)
+                momentApi.addComment(this.$store.state.currentUserId, moment.momentId, moment.newComment)
                     .then((response) => {
                         // if (response.data == 'OK') {
                         if (response.success) {
@@ -768,7 +767,7 @@
                                 type: 'success'
                             });
                             // this.messageWebsocketHandler(moment.momentId, 2, ' ' + moment.newComment)
-                            if (moment.comments!=undefined &&moment.comments.length == 4) {
+                            if (moment.comments != undefined && moment.comments.length == 4) {
                                 moment.more_comments = true;
                                 moment.newComment = '';
                             } else {
@@ -836,67 +835,34 @@
                 if (!this.flag) {
                     return;
                 }
-                this.axios.get('http://192.168.43.249:54468/api/DisplayMoments/followUsers', {
-                    params: {
-                        Email: this.$store.state.currentUserId,
-                        Page: page,
+                momentApi.getfollowUserMoments(page-1).then((response) => {
+                    var newTotalMoments = response.data;
+
+                    if (newTotalMoments.length < 1) {
+                        this.bottomHint = '刷完了辣！(⑉꒦ິ^꒦ິ⑉)！我可是有底线的！'
+                        this.flag = false;
                     }
-                })
-                    .then((response) => {
-                        var newTotalMoments = response.data;
-
-                        if (newTotalMoments.length < 1) {
-                            this.bottomHint = '刷完了辣！(⑉꒦ິ^꒦ິ⑉)！我可是有底线的！'
-                            this.flag = false;
+                    newTotalMoments.forEach(element => {
+                        //点赞状态
+                        if (element.liked == 0) {
+                            var likeImg = require('../image/comment-like.png');
+                            Vue.set(element, 'likeImg', likeImg)
+                        } else {
+                            var unlikeImg = require('../image/comment-unlike.png');
+                            Vue.set(element, 'likeImg', unlikeImg)
                         }
+                        //收藏状态
+                        if (element.collected == 0) {
+                            var collectImg = require('../image/collect.png');
+                            Vue.set(element, 'collectImg', collectImg)
 
-                        newTotalMoments.forEach(element => {
-                            //点赞状态
-                            if (element.liked == 0) {
-                                var likeImg = require('../image/comment-like.png');
-                                Vue.set(element, 'likeImg', likeImg)
-                            } else {
-                                var unlikeImg = require('../image/comment-unlike.png');
-                                Vue.set(element, 'likeImg', unlikeImg)
-                            }
-                            //收藏状态
-                            if (element.collected == 0) {
-                                var collectImg = require('../image/collect.png');
-                                Vue.set(element, 'collectImg', collectImg)
-
-                            } else {
-                                var uncollectImg = require('../image/uncollect.png');
-                                Vue.set(element, 'collectImg', uncollectImg)
-                            }
-
-                            //请求图片
-                            this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
-                                .then((response) => {
-                                    let list = response.data;
-                                    //将id数组变为url数组
-                                    // element.moment.imgList = [];
-                                    var imgList = []
-                                    list.forEach(ele => {
-                                        // element.moment.imgList.push({
-                                        imgList.push('http://192.168.43.249:54468/api/Picture/Gets?pid=' +
-                                            ele
-                                        )
-                                        // ele = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + ele;
-                                    });
-                                    Vue.set(element.moment, 'imgList', imgList);
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                });
-                            element.newComment = '';
-
-                            var Photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
-                                '&type=2';
-                            Vue.set(element, 'Photo', Photo)
-                            console.log(newTotalMoments)
-                        })
-                        this.totalMoments = this.totalMoments.concat(newTotalMoments);
-                    })
+                        } else {
+                            var uncollectImg = require('../image/uncollect.png');
+                            Vue.set(element, 'collectImg', uncollectImg)
+                        }
+                    });
+                    this.totalMoments = this.totalMoments.concat(newTotalMoments);
+                })
             },
             backgroundHandler() {
                 console.log('backgroundHandler');

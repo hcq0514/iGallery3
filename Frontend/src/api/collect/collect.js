@@ -1,6 +1,6 @@
 import http from '../public/public'
 
-let apiUrl = 'http://localhost:6001/api/collect/'
+let apiUrl = 'http://localhost:6001/api/base/collect/'
 
 //获取用户收藏夹
 export const getUserCollectionsByUserId = (userId) => {

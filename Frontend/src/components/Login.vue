@@ -108,12 +108,13 @@
                             if (!response.success) {
                                 this.$message.error(response.message);
                             } else {
+                                localStorage.setItem('Bearer',response.data.token);
                                 //写入全局变量
-                                this.$store.commit('setCurrentUserId', response.data.id);
+                                this.$store.commit('setCurrentUserId', response.data.userId);
                                 this.$store.commit('setCurrentUsername', response.data.username);
-                                this.$store.commit('setCurrentUserBio', response.data.bio);
-                                this.$store.commit('setCurrentUserPhoto', response.data.photoUrl);
-                                this.$router.push('/main/user/'+response.data.id);
+                                this.$store.commit('setCurrentUserBio', response.data.userBio);
+                                this.$store.commit('setCurrentUserPhoto', response.data.userPhoto);
+                                this.$router.push('/main/user/'+response.data.userId);
                             }
                         })
                     } else {

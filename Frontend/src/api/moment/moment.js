@@ -8,8 +8,8 @@ export const getMomentsByUserId = (userId) => {
     return http.requestQuickGet(momentApiUrl + "getMomentsByUserId?userId=" + userId)
 };
 //获取用户关注人动态
-export const getfollowUserMoments = (userId) => {
-    return http.requestQuickGet(momentApiUrl + "followUserMoments?userId=" + userId)
+export const getfollowUserMoments = (page) => {
+    return http.requestQuickGet(momentApiUrl + "followUserMoments?page=" + page)
 };
 
 //添加动态评论
