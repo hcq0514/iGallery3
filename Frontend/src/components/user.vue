@@ -110,7 +110,7 @@
                                          indicator-position="outside" :arrow="showArrow(moment)">
                                 <el-carousel-item v-for="(img,index) in moment.momentImgList" :key="index">
                                     <div class="pic">
-                                        <img :src="img" alt="movementImg">
+                                        <img class="momentImg" :src="img"  alt="movementImg">
                                     </div>
                                 </el-carousel-item>
                             </el-carousel>
@@ -372,6 +372,13 @@
         font-size: 12px;
         margin: 5px 8px 5px 0;
         display: inline-block;
+    }
+
+    .momentImg{
+        width: 100%;
+        height: inherit;
+        /*min-height: 600px;*/
+        /*min-width: 1400px;*/
     }
 
     .hover-cursor {

@@ -3,6 +3,10 @@ import http from '../public/public'
 let momentApiUrl = 'http://localhost:6001/api/moment/'
 
 
+//添加动态评论
+export const addMoment = (userId, content) => {
+    return http.requestPost(momentApiUrl + "?userId=" + userId + "&content=" + content)
+};
 //获取用户动态
 export const getMomentsByUserId = (userId) => {
     return http.requestQuickGet(momentApiUrl + "getMomentsByUserId?userId=" + userId)
